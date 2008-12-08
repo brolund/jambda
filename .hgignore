@@ -1,0 +1,16 @@
+syntax: glob
+.metadata
+*.class
+*.log
+
+syntax: regexp
+^[^/]*/lib/*
+^[^/]*/bin/*
+^[^/]*/classes/*
+^[^/]*/target/*
+target/*
+publisher/*
+output/*
+^[^/]*/reports/*
+^[^/]*/testoutput/*
+^[^/]*/.manager
