@@ -1,4 +1,4 @@
-package com.agical.jfunc.scala
+package com.agical.jambda.scala
 
 
 

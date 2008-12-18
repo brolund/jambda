@@ -1,11 +1,11 @@
-package com.agical.jfunc;
+package com.agical.jambda;
 
-import static com.agical.jfunc.Option.*;
+import static com.agical.jambda.Option.*;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.agical.jfunc.Functions.*;
+import com.agical.jambda.Functions.*;
 
 public class Cons<T> implements Iterable<T> {
 	public final Option<T> head;
@@ -50,7 +50,7 @@ public class Cons<T> implements Iterable<T> {
 	    }
 
 	    public T next() {
-	    	// ElŠnde...
+	    	// Elï¿½nde...
 	    	T element = this.cons.head.escape(
 	    			new Fn0<T>() { public T apply() { throw new NoSuchElementException(); } });
 	    	this.cons = this.cons.tail;

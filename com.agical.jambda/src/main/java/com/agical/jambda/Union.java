@@ -1,6 +1,6 @@
-package com.agical.jfunc;
+package com.agical.jambda;
 
-import com.agical.jfunc.Functions.Fn1;
+import com.agical.jambda.Functions.Fn1;
 
 public abstract class Union<TLeft, TRight> {
 	public abstract <TOut> TOut map(Fn1<TLeft, TOut> leftFn,

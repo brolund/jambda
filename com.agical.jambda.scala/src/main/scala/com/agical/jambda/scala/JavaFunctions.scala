@@ -1,6 +1,6 @@
-package com.agical.jfunc.scala
+package com.agical.jambda.scala
 
-import com.agical.jfunc.Functions._
+import com.agical.jambda.Functions._
 
 object JavaFunctions {
   implicit def scalaFn0ToJavaFn0[R](f:Function0[R]):Fn0[R] = new Fn0[R] {

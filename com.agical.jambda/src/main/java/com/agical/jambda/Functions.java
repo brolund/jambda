@@ -1,4 +1,4 @@
-package com.agical.jfunc;
+package com.agical.jambda;
 
 public class Functions {
 

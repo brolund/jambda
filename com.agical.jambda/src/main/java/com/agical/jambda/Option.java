@@ -1,10 +1,10 @@
-package com.agical.jfunc;
+package com.agical.jambda;
 
 import java.util.AbstractCollection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.agical.jfunc.Functions.*;
+import com.agical.jambda.Functions.*;
 
 public abstract class Option<T> extends AbstractCollection<T> {
 	public abstract <TOut> TOut map(Fn1<T, TOut> someFn, Fn0<TOut> noneFn);
