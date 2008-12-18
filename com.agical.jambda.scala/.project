@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>com.agical.jfunc.scala</name>
+	<name>com.agical.jambda.scala</name>
 	<comment></comment>
 	<projects>
-		<project>com.agical.jfunc</project>
+		<project>com.agical.jambda</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
