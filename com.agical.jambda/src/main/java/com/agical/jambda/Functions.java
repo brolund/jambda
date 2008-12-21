@@ -6,11 +6,24 @@ public class Functions {
         public abstract R apply();
     }
 
-    public static abstract class Fn1<T, R> {
+    public static abstract class Fn1<T, R> extends Fn0<Fn1<T, R>> {
         public abstract R apply(T arg);
+        
+        public Fn1<T, R> apply() {
+			return this;
+		}
+        
+		public <R2> Fn1<T, R2> compose(final Fn1<R, R2> g) {
+        	final Fn1<T, R> f = this;
+        	return new Fn1<T, R2>() {
+                public R2 apply(T x) {
+                    return g.apply(f.apply(x));
+                }
+            };
+        }
     }
 
-    public static abstract class Fn2<T1, T2, R> {
+    public static abstract class Fn2<T1, T2, R> extends Fn1<T1, Fn1<T2, R>>{
         public abstract R apply(T1 arg1, T2 arg2);
 
         public Fn1<T2, R> apply(final T1 arg1) {
@@ -23,7 +36,7 @@ public class Functions {
         }
     }
 
-    public static abstract class Fn3<T1, T2, T3, R> {
+    public static abstract class Fn3<T1, T2, T3, R> extends Fn2<T1, T2, Fn1<T3, R>>{
         public abstract R apply(T1 arg1, T2 arg2, T3 arg3);
 
         public Fn1<T3, R> apply(final T1 arg1, final T2 arg2) {
@@ -33,19 +46,10 @@ public class Functions {
                     return origFn.apply(arg1, arg2, arg3);
                 }
             };
-        }
-
-        public Fn2<T2, T3, R> apply(final T1 arg1) {
-            final Fn3<T1, T2, T3, R> origFn = this;
-            return new Fn2<T2, T3, R>() {
-                public R apply(T2 arg2, T3 arg3) {
-                    return origFn.apply(arg1, arg2, arg3);
-                }
-            };
-        }
+        }        
     }
 
-    public static abstract class Fn4<T1, T2, T3, T4, R> {
+    public static abstract class Fn4<T1, T2, T3, T4, R> extends Fn3<T1, T2, T3, Fn1<T4, R>>{
         public abstract R apply(T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
         public Fn1<T4, R> apply(final T1 arg1, final T2 arg2, final T3 arg3) {
@@ -55,25 +59,7 @@ public class Functions {
                     return origFn.apply(arg1, arg2, arg3, arg4);
                 }
             };
-        }
-
-        public Fn2<T3, T4, R> apply(final T1 arg1, final T2 arg2) {
-            final Fn4<T1, T2, T3, T4, R> origFn = this;
-            return new Fn2<T3, T4, R>() {
-                public R apply(T3 arg3, T4 arg4) {
-                    return origFn.apply(arg1, arg2, arg3, arg4);
-                }
-            };
-        }
-
-        public Fn3<T2, T3, T4, R> apply(final T1 arg1) {
-            final Fn4<T1, T2, T3, T4, R> origFn = this;
-            return new Fn3<T2, T3, T4, R>() {
-                public R apply(T2 arg2, T3 arg3, T4 arg4) {
-                    return origFn.apply(arg1, arg2, arg3, arg4);
-                }
-            };
-        }
+        }        
     }
 
     /// --------------
@@ -104,10 +90,6 @@ public class Functions {
 
     // compose(f, g) = (\ x. g(f x))
     public static <TX, TY, TZ> Fn1<TX, TZ> compose(final Fn1<TX, TY> f, final Fn1<TY, TZ> g) {
-        return new Fn1<TX, TZ>() {
-            public TZ apply(TX x) {
-                return g.apply(f.apply(x));
-            }
-        };
+        return f.compose(g);
     }
 }
