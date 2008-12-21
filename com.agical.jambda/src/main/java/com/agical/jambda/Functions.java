@@ -35,7 +35,7 @@ public class Functions {
             };
         }
 
-        public Fn2<T2, T3, R> Apply(final T1 arg1) {
+        public Fn2<T2, T3, R> apply(final T1 arg1) {
             final Fn3<T1, T2, T3, R> origFn = this;
             return new Fn2<T2, T3, R>() {
                 public R apply(T2 arg2, T3 arg3) {
