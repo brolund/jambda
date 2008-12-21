@@ -61,6 +61,32 @@ public class Functions {
             };
         }        
     }
+    
+    public static abstract class Fn5<T1, T2, T3, T4, T5, R> extends Fn4<T1, T2, T3, T4, Fn1<T5, R>>{
+        public abstract R apply(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+
+        public Fn1<T5, R> apply(final T1 arg1, final T2 arg2, final T3 arg3, final T4 arg4) {
+            final Fn5<T1, T2, T3, T4, T5, R> origFn = this;
+            return new Fn1<T5, R>() {
+                public R apply(T5 arg5) {
+                    return origFn.apply(arg1, arg2, arg3, arg4, arg5);
+                }
+            };
+        }        
+    }
+    
+    public static abstract class Fn6<T1, T2, T3, T4, T5, T6, R> extends Fn5<T1, T2, T3, T4, T5, Fn1<T6, R>>{
+        public abstract R apply(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6);
+
+        public Fn1<T6, R> apply(final T1 arg1, final T2 arg2, final T3 arg3, final T4 arg4, final T5 arg5) {
+            final Fn6<T1, T2, T3, T4, T5, T6, R> origFn = this;
+            return new Fn1<T6, R>() {
+                public R apply(T6 arg6) {
+                    return origFn.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+                }
+            };
+        }        
+    }
 
     /// --------------
     
