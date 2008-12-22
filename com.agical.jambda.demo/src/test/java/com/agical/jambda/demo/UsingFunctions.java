@@ -13,7 +13,7 @@ public class UsingFunctions {
     @Test
     public void theSimplestFunction() throws Exception {
         /*!
-        The simpest function is =Fn0=, which maps to a specific type from nothing:
+        The simplest function is =Fn0=, which maps to a specific type from nothing:
         */
         String greetingsPhrase = anonymousGreeting().apply();
         /*!
@@ -26,8 +26,8 @@ public class UsingFunctions {
         #{clazz.anonymousGreeting}
         <<<<
         This is a static method that resides in the current class, but in reality you will probably
-        group your static methods (i.e. function) by their purpose. Static method can always be 
-        imported with a static import, hence the code will look clean.
+        group these domain functions by their purpose. Also, static method can be 
+        imported with a static import, hence the code won't need being referenced by class name.
         */
         assertEquals("Hello!", greetingsPhrase);
         Storage.store("greetingsPhrase", greetingsPhrase);
@@ -65,7 +65,6 @@ public class UsingFunctions {
         =User= to a =Greeting=, and for documentation 
         purposes here we also want to turn the =Greeting= into a =String=. Each such mapping 
         gets its own reusable mapping function:
-        
         */
         String greetingsPhrase = greetingToString().apply(
                 typedPersonalGreeting().apply(
@@ -92,6 +91,33 @@ public class UsingFunctions {
         Storage.store("greetingsPhrase", greetingsPhrase);
     }
 
+    @Test
+    public void usingCompositionToBuildComplexFunctions() throws Exception {
+        /*!
+        Instead of assembling the functions at the same time as they are executed, 
+        composition can be used.
+        
+        In the last example, we went through =String-User-Greeting-String=. We can use
+        the =compose= method and create a function to use later on:
+        */
+        Fn1<String, String> greetPerson = 
+            userCreator().compose(typedPersonalGreeting().compose(greetingToString()));
+        
+        String greetingsPhrase = greetPerson.apply("Daniel");
+        /*!
+        This composition can of course be stored as any other domain function in some 
+        module (class) in your code base.
+        
+        The =greetingsPhrase= variable is (as before):
+        >>>>
+        #{greetingsPhrase}
+        <<<<
+        */
+        assertEquals("Hello, Daniel!", greetingsPhrase);
+        Storage.store("greetingsPhrase", greetingsPhrase);
+        
+    }
+    
 
     public static Fn1<String, User> userCreator() {
         return new Fn1<String, User>() {
