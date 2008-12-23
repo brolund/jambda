@@ -4,7 +4,8 @@ import java.util.AbstractCollection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.agical.jambda.Functions.*;
+import com.agical.jambda.Functions.Fn0;
+import com.agical.jambda.Functions.Fn1;
 
 public abstract class Option<T> extends AbstractCollection<T> {
 	public abstract <TOut> TOut map(Fn1<T, TOut> someFn, Fn0<TOut> noneFn);
@@ -110,6 +111,7 @@ public abstract class Option<T> extends AbstractCollection<T> {
 	    	throw new UnsupportedOperationException();
 	    }
 	}
+
 }
 
 

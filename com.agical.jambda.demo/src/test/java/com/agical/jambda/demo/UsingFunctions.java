@@ -5,10 +5,16 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
-import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
+import static com.agical.jambda.demo.DemoFunctions.*;
 
 public class UsingFunctions {
+    /*!!
+    DemoFunctions is the building blocks of functional programming. They are used in
+       - Function composition
+       - Options 
+       - Unions
+    */
     
     @Test
     public void theSimplestFunction() throws Exception {
@@ -23,7 +29,7 @@ public class UsingFunctions {
         <<<<
         The implementation of the function is
         >>>>
-        #{clazz.anonymousGreeting}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').anonymousGreeting}
         <<<<
         This is a static method that resides in the current class, but in reality you will probably
         group these domain functions by their purpose. Also, static method can be 
@@ -47,7 +53,7 @@ public class UsingFunctions {
         <<<<
         The implementation of =Fn1= is
         >>>>
-        #{clazz.personalGreeting}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').personalGreeting}
         <<<<
         */
         assertEquals("Hello, Daniel!", greetingsPhrase);
@@ -76,13 +82,13 @@ public class UsingFunctions {
         <<<<
         The implementations used are:
         >>>>
-        #{clazz.userCreator}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').userCreator}
         <<<<
         >>>>
-        #{clazz.typedPersonalGreeting}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').typedPersonalGreeting}
         <<<<
         >>>>
-        #{clazz.greetingToString}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').greetingToString}
         <<<<
         The instantiable classes =Greeting= and =User= are just *simple java beans*, or 
         *structs* as a functional programmer would put it. 
@@ -116,51 +122,6 @@ public class UsingFunctions {
         assertEquals("Hello, Daniel!", greetingsPhrase);
         Storage.store("greetingsPhrase", greetingsPhrase);
         
-    }
-    
-
-    public static Fn1<String, User> userCreator() {
-        return new Fn1<String, User>() {
-            public User apply(String name) {
-                return new User(name);
-            }
-        };
-    }
-
-
-    public static Fn0<String> anonymousGreeting() {
-        return new Fn0<String>() {
-            public String apply() {
-                return "Hello!";
-            }
-        };
-    }
-
-
-    public static Fn1<Greeting, String> greetingToString() {
-        return new Fn1<Greeting, String>() {
-            public String apply(Greeting greeting) {
-                return greeting.getGreeting();
-            }
-        };
-    }
-
-
-    public static Fn1<String, String> personalGreeting() {
-        return new Fn1<String, String>() {
-            public String apply(String name) {
-                return "Hello, " + name + "!";
-            }
-        };
-    }
-
-
-    public static Fn1<User, Greeting> typedPersonalGreeting() {
-        return new Fn1<User, Greeting>() {
-            public Greeting apply(User user) {
-                return new Greeting("Hello, " + user.getName() + "!");
-            }
-        };
     }
 
 }
