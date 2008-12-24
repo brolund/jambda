@@ -12,7 +12,9 @@ import com.agical.jambda.Option;
 public class UsingOptions {
     /*!!
     *Options* are used to make the decision on data existence. Functions are passed to an Option 
-    to handle the cases *some data exist*, i.e. *some*, and *no data exists*, i.e. *none*. 
+    to handle the cases *some data exist*, i.e. *some*, and *no data exists*, i.e. *none*.
+    
+    The decision on what to to is made when the Option is created, i.e. where you have the knowledge  
     */
     @Test
     public void theSomeOption() throws Exception {

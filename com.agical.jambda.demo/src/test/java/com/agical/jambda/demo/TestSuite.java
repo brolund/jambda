@@ -10,7 +10,7 @@ import com.agical.bumblebee.ruby.RubyCollector;
 
 @RunWith(BumbleBeeSuiteRunner.class)
 @BumblebeeCollectors({RubyCollector.class})
-@SuiteClasses({UsingFunctions.class, UsingOptions.class})
+@SuiteClasses({UsingFunctions.class, UsingOptions.class, UsingUnions.class})
 public class TestSuite {
 
 }

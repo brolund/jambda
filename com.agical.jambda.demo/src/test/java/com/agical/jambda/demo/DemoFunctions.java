@@ -54,5 +54,14 @@ public class DemoFunctions {
             }
         };
     }
+
+
+    public static Fn1<Exception, Greeting> exceptionGreeting() {
+        return new Fn1<Exception, Greeting>() {
+            public Greeting apply(Exception exception) {
+                return new Greeting( "There was an Exception: " + exception.getMessage());
+            }
+        };
+    }
     
 }
