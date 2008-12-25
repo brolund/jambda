@@ -1,6 +1,7 @@
 package com.agical.jambda;
 
 public class Tuples {
+    
     public static <T1, T2> Tuple2<T1, T2> two(T1 t1, T2 t2) {
         return new Tuple2<T1, T2> (t1, t2);
     };
