@@ -1,0 +1,154 @@
+package com.agical.jambda;
+
+public class Tuples {
+	public static class Tuple2<T1, T2> {
+		private final T1 first;
+		private final T2 second;
+		
+		private Tuple2(T1 first, T2 second){
+			this.first = first;
+			this.second = second;
+		}
+
+		public T1 getFirst() {
+			return this.first;
+		}
+
+		public T2 getSecond() {
+			return this.second;
+		}
+	}
+		
+	
+	public static class Tuple3<T1, T2, T3> {
+		private final T1 first;
+		private final T2 second;
+		private final T3 third;
+		
+		private Tuple3(T1 first, T2 second, T3 third){
+			this.first = first;
+			this.second = second;
+			this.third = third;
+		}
+
+		public T1 getFirst() {
+			return this.first;
+		}
+
+		public T2 getSecond() {
+			return this.second;
+		}
+
+		public T3 getThird() {
+			return this.third;
+		}
+	}
+	
+	public static class Tuple4<T1, T2, T3, T4> {
+		private final T1 first;
+		private final T2 second;
+		private final T3 third;
+		private final T4 forth;
+		
+		public Tuple4(T1 first, T2 second, T3 third, T4 forth){
+			this.first = first;
+			this.second = second;
+			this.third = third;
+			this.forth = forth;
+		}
+
+		public T1 getFirst() {
+			return this.first;
+		}
+
+		public T2 getSecond() {
+			return this.second;
+		}
+
+		public T3 getThird() {
+			return this.third;
+		}
+		
+		public T4 getForth() {
+			return this.forth;
+		}
+	}
+	
+	public static class Tuple5<T1, T2, T3, T4, T5> {
+		private final T1 first;
+		private final T2 second;
+		private final T3 third;
+		private final T4 forth;
+		private final T5 fifth;
+		
+		public Tuple5(T1 first, T2 second, T3 third, T4 forth, T5 fifth){
+			this.first = first;
+			this.second = second;
+			this.third = third;
+			this.forth = forth;
+			this.fifth = fifth;
+		}
+
+		public T1 getFirst() {
+			return this.first;
+		}
+
+		public T2 getSecond() {
+			return this.second;
+		}
+
+		public T3 getThird() {
+			return this.third;
+		}
+		
+		public T4 getForth() {
+			return this.forth;
+		}
+		
+		public T5 getFifth() {
+			return this.fifth;
+		}
+	}
+	
+	public static class Tuple6<T1, T2, T3, T4, T5, T6> {
+		private final T1 first;
+		private final T2 second;
+		private final T3 third;
+		private final T4 forth;
+		private final T5 fifth;
+		private final T6 sixth;
+		
+		public Tuple6(T1 first, T2 second, T3 third, T4 forth, T5 fifth, T6 sixth){
+			this.first = first;
+			this.second = second;
+			this.third = third;
+			this.forth = forth;
+			this.fifth = fifth;
+			this.sixth = sixth;
+		}
+
+		public T1 getFirst() {
+			return this.first;
+		}
+
+		public T2 getSecond() {
+			return this.second;
+		}
+
+		public T3 getThird() {
+			return this.third;
+		}
+		
+		public T4 getForth() {
+			return this.forth;
+		}
+		
+		public T5 getFifth() {
+			return this.fifth;
+		}
+		
+		public T6 getSixth() {
+			return this.sixth;
+		}
+	}
+}

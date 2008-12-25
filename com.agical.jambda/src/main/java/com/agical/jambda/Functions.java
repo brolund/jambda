@@ -1,5 +1,7 @@
 package com.agical.jambda;
 
+import com.agical.jambda.Tuples.*;
+
 public class Functions {
 
     public static abstract class Fn0<R> {
@@ -12,7 +14,7 @@ public class Functions {
         public Fn1<T, R> apply() {
 			return this;
 		}
-        
+
 		public <R2> Fn1<T, R2> compose(final Fn1<R, R2> g) {
         	final Fn1<T, R> f = this;
         	return new Fn1<T, R2>() {
@@ -34,6 +36,10 @@ public class Functions {
                 }
             };
         }
+        
+        public R apply(Tuple2<T1, T2> arg) {
+        	return this.apply(arg.getFirst(), arg.getSecond());
+        }
     }
 
     public static abstract class Fn3<T1, T2, T3, R> extends Fn2<T1, T2, Fn1<T3, R>>{
@@ -46,7 +52,11 @@ public class Functions {
                     return origFn.apply(arg1, arg2, arg3);
                 }
             };
-        }        
+        }
+        
+        public R apply(Tuple3<T1, T2, T3> arg) {
+        	return this.apply(arg.getFirst(), arg.getSecond(), arg.getThird());
+        }
     }
 
     public static abstract class Fn4<T1, T2, T3, T4, R> extends Fn3<T1, T2, T3, Fn1<T4, R>>{
@@ -59,7 +69,11 @@ public class Functions {
                     return origFn.apply(arg1, arg2, arg3, arg4);
                 }
             };
-        }        
+        }   
+        
+        public R apply(Tuple4<T1, T2, T3, T4> arg) {
+        	return this.apply(arg.getFirst(), arg.getSecond(), arg.getThird(), arg.getForth());
+        }
     }
     
     public static abstract class Fn5<T1, T2, T3, T4, T5, R> extends Fn4<T1, T2, T3, T4, Fn1<T5, R>>{
@@ -72,7 +86,11 @@ public class Functions {
                     return origFn.apply(arg1, arg2, arg3, arg4, arg5);
                 }
             };
-        }        
+        }
+        
+        public R apply(Tuple5<T1, T2, T3, T4, T5> arg) {
+        	return this.apply(arg.getFirst(), arg.getSecond(), arg.getThird(), arg.getForth(), arg.getFifth());
+        }
     }
     
     public static abstract class Fn6<T1, T2, T3, T4, T5, T6, R> extends Fn5<T1, T2, T3, T4, T5, Fn1<T6, R>>{
@@ -86,6 +104,10 @@ public class Functions {
                 }
             };
         }        
+
+        public R apply(Tuple6<T1, T2, T3, T4, T5, T6> arg) {
+        	return this.apply(arg.getFirst(), arg.getSecond(), arg.getThird(), arg.getForth(), arg.getFifth(), arg.getSixth());
+        }
     }
 
     /// --------------
