@@ -64,11 +64,15 @@ public class Cons<T> implements Iterable<T> {
 	}
 	
 	public static <TSource, TTarget> TTarget foldLeft(Iterable<TSource> source, Fn2<TSource, TTarget, TTarget> fn, TTarget accumulator) {
-		// Recursion without "Tail Call Optimizing" is not a good idea.
-		for(TSource element:source)
-			accumulator = fn.apply(element, accumulator);
-		return accumulator;
+		return foldLeft(source.iterator(), fn, accumulator); 
 	}
+
+	public static <TSource, TTarget> TTarget foldLeft(Iterator<TSource> source, Fn2<TSource, TTarget, TTarget> fn, TTarget accumulator) {
+	    // Recursion without "Tail Call Optimizing" is not a good idea.
+        while(source.hasNext())
+            accumulator = fn.apply(source.next(), accumulator);
+        return accumulator;
+    }
 
 	public static <TSource, TTarget> TTarget foldRight(Iterable<TSource> source, Fn2<TSource, TTarget, TTarget> fn, TTarget accumulator) {
         return foldRight(source.iterator(), fn, accumulator);
