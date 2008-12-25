@@ -1,6 +1,5 @@
 package com.agical.jambda.demo;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.agical.bumblebee.junit4.Storage;
+import static com.agical.bumblebee.junit4.Storage.*;
 import com.agical.jambda.Cons;
 import com.agical.jambda.Functions.Fn2;
 
@@ -39,6 +38,10 @@ public class UsingCons {
         assertEquals("Daniel", iterator.next().getName());
         assertEquals("Johan", iterator.next().getName());
         assertEquals("Joakim", iterator.next().getName());
+        /*!
+        In this case we are returned an =Iterable<User>= since the function provided to the =map= 
+        function created a =User= object for each =String= object in the provided =List<String>=.  
+        */
     }
     
     @Test
@@ -75,8 +78,8 @@ public class UsingCons {
         The result depends on how the fold was performed, and on how the function makes the aggregation.
         */
         
-        Storage.store("foldLeft", foldLeft);
-        Storage.store("foldRight", foldRight);
+        store("foldLeft", foldLeft);
+        store("foldRight", foldRight);
         assertEquals("(((Daniel)Johan)Joakim)", foldLeft);
         assertEquals("(((Joakim)Johan)Daniel)", foldRight);
     }
