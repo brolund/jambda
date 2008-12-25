@@ -4,7 +4,6 @@ import static com.agical.jambda.Option.none;
 import static com.agical.jambda.Option.some;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 import com.agical.jambda.Functions.Fn0;
@@ -72,13 +71,11 @@ public class Cons<T> implements Iterable<T> {
 	}
 
 	public static <TSource, TTarget> TTarget foldRight(Iterable<TSource> source, Fn2<TSource, TTarget, TTarget> fn, TTarget accumulator) {
-	    // Elände, elände. Borde inte detta vara foldLeft? /Daniel
-	    LinkedList<TSource> list = new LinkedList<TSource>();
-        for(TSource element:source)
-            list.addFirst(element);
-        for(TSource element:list)
-            accumulator = fn.apply(element, accumulator);
-        return accumulator;
+        return foldRight(source.iterator(), fn, accumulator);
+    }
+
+    public static <TTarget, TSource> TTarget foldRight(Iterator<TSource> iterator, Fn2<TSource, TTarget, TTarget> fn,TTarget accumulator) {
+        return iterator.hasNext()?fn.apply(iterator.next(), foldRight(iterator, fn, accumulator)):accumulator;
     }
 	
 	public static <TSource, TTarget> Iterable<TTarget> map(Iterable<TSource> source, final Fn1<TSource, TTarget> selector) {
@@ -93,7 +90,7 @@ public class Cons<T> implements Iterable<T> {
 	}
 	
 	public static <T> Iterable<T> filter(Iterable<T> source, final Fn1<T, Boolean> predicate) {
-		return foldLeft(
+		return foldRight(
 				source,
 				new Fn2<T, Cons<T>, Cons<T>>() {
 					public Cons<T> apply(T element, Cons<T> acc) {

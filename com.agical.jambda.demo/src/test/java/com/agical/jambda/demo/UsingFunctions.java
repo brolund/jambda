@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
+import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import static com.agical.jambda.demo.DemoFunctions.*;
 
@@ -21,19 +22,21 @@ public class UsingFunctions {
         /*!
         The simplest function is =Fn0=, which maps to a specific type from nothing:
         */
-        String greetingsPhrase = anonymousGreeting().apply();
+        Fn0<String> anonymousGreeting = new Fn0<String>() {
+            public String apply() {
+                return "Hello!";
+            }
+        };
+        String greetingsPhrase = anonymousGreeting.apply();
         /*!
         The =greeting= variable is:
         >>>>
         #{greetingsPhrase}
         <<<<
-        The implementation of the function is
-        >>>>
-        #{clazz('com.agical.jambda.demo.DemoFunctions').anonymousGreeting}
-        <<<<
-        This is a static method that resides in the current class, but in reality you will probably
-        group these domain functions by their purpose. Also, static method can be 
-        imported with a static import, hence the code won't need being referenced by class name.
+        This is an anonymous inner class, but in reality you will probably
+        extract and group these domain functions by their purpose, e.g. as constants. 
+        Also, constants and static method can be imported with a static import, hence the code won't 
+        need being referenced by class name.
         */
         assertEquals("Hello!", greetingsPhrase);
         Storage.store("greetingsPhrase", greetingsPhrase);
@@ -120,6 +123,26 @@ public class UsingFunctions {
         <<<<
         */
         assertEquals("Hello, Daniel!", greetingsPhrase);
+        Storage.store("greetingsPhrase", greetingsPhrase);
+    }        
+    @Test
+    public void compositionIsCommutative() throws Exception {
+        /*!
+        The interesting thing about composition is that it is commutative, i.e. the function above
+        could also be created using
+        */
+        Fn1<String, String> greetPerson = 
+            userCreator().compose(typedPersonalGreeting()).compose(greetingToString());
+        String greetingsPhrase = greetPerson.apply("Johan");
+        /*!
+        (note the placement of the parenthesis)
+        
+        The =greetingsPhrase= variable is:
+        >>>>
+        #{greetingsPhrase}
+        <<<<
+        */
+        assertEquals("Hello, Johan!", greetingsPhrase);
         Storage.store("greetingsPhrase", greetingsPhrase);
         
     }
