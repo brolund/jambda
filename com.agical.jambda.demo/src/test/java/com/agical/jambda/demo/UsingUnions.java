@@ -1,11 +1,12 @@
 package com.agical.jambda.demo;
 
+import static com.agical.jambda.demo.DemoFunctions.exceptionGreeting;
+import static com.agical.jambda.demo.DemoFunctions.typedPersonalGreeting;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.agical.jambda.Union;
-
-import static com.agical.jambda.demo.DemoFunctions.*;
-import static org.junit.Assert.assertEquals;
 
 public class UsingUnions {
     /*!!
@@ -36,11 +37,11 @@ public class UsingUnions {
         assertEquals("There was an Exception: " + message, exceptionGreeting.getGreeting());
         /*!
         This is of course not the only application of Unions, but it shows a powerful application.
+        
+        Normally the creation of the Union, i.e. calling the =left= or =right= factory method, is done at the place 
+        where this information appears. In the case of the User/Exception, it is probably made in the method where the 
+        exception first can be caught. 
         */
-       
-
-        
-        
     }
     
 }
