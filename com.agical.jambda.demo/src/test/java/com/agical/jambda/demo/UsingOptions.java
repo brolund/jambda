@@ -36,7 +36,7 @@ public class UsingOptions {
     @Test
     public void theNoneOption() throws Exception {
         /*!
-        Here we create an option *without* data by calling the factory method =some=.
+        Here we create an option *without* data by calling the factory method =none=.
         Since it represents no data available, no data is provided. 
         */
         Option<User> option = Option.none();
