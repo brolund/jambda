@@ -36,6 +36,10 @@ public class UsingUnions {
         Greeting exceptionGreeting = oopsExceptionWasThrown.map(typedPersonalGreeting(), exceptionGreeting());
         assertEquals("There was an Exception: " + message, exceptionGreeting.getGreeting());
         /*!
+        The function that handles the exception looks like this:
+        >>>>
+        #{clazz('com.agical.jambda.demo.DemoFunctions').exceptionGreeting}
+        <<<<
         This is of course not the only application of Unions, but it shows a powerful application.
         
         Normally the creation of the Union, i.e. calling the =left= or =right= factory method, is done at the place 

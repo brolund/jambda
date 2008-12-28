@@ -2,6 +2,7 @@ package com.agical.jambda.demo;
 
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
+import com.agical.jambda.Functions.Fn2;
 
 public class DemoFunctions {
     
@@ -52,6 +53,22 @@ public class DemoFunctions {
             public Greeting apply(Exception exception) {
                 return new Greeting("There was an Exception: "
                         + exception.getMessage());
+            }
+        };
+    }
+    
+    public static Fn1<String, Boolean> acceptStringsStartingWithJ() {
+        return new Fn1<String, Boolean>() {
+            public Boolean apply(String string) {
+                return string.indexOf("J")==0;
+            }
+        };
+    }
+
+    public static Fn2<String, String, String> aggregateStrings() {
+        return new Fn2<String, String, String>() {
+            public String apply(String string, String accumulation) {
+                return "(" + accumulation + string + ")";
             }
         };
     }

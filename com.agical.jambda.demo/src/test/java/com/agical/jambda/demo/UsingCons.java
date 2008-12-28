@@ -1,6 +1,9 @@
 package com.agical.jambda.demo;
 
+import static com.agical.bumblebee.junit4.Storage.store;
+import static com.agical.jambda.demo.DemoFunctions.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,7 +11,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import static com.agical.bumblebee.junit4.Storage.*;
 import com.agical.jambda.Cons;
 import com.agical.jambda.Functions.Fn2;
 
@@ -33,7 +35,7 @@ public class UsingCons {
         userNames.add("Johan");
         userNames.add("Joakim");
         
-        Iterable<User> users = Cons.map(userNames, DemoFunctions.userCreator());
+        Iterable<User> users = Cons.map(userNames, userCreator());
         Iterator<User> iterator = users.iterator();
         assertEquals("Daniel", iterator.next().getName());
         assertEquals("Johan", iterator.next().getName());
@@ -60,7 +62,7 @@ public class UsingCons {
         /*!
         Now we will use an aggregating function to create a string:
         >>>>
-        #{clazz.aggregateStrings}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').aggregateStrings}
         <<<<
         This function simply appends the =string= parameter to the =accumulation= parameter and puts
         parenthesis around.  
@@ -84,14 +86,31 @@ public class UsingCons {
         assertEquals("(((Joakim)Johan)Daniel)", foldRight);
     }
 
-    private Fn2<String, String, String> aggregateStrings() {
-        return new Fn2<String, String, String>() {
-            public String apply(String string, String accumulation) {
-                return "(" + accumulation + string + ")";
-            }
-        };
+    @Test
+    public void filteringACollection() throws Exception {
+        /*!
+        Other times you have a collection of data and you want to filter out some of the elements.
+        
+        We have the same list of names, but we only want the names that start with *J*: 
+        */
+        List<String> userNames = new ArrayList<String>();
+        userNames.add("Daniel");
+        userNames.add("Johan");
+        userNames.add("Joakim");
+        
+        Iterable<String> users = Cons.filter(userNames, acceptStringsStartingWithJ());
+        Iterator<String> iterator = users.iterator();
+        assertEquals("Johan", iterator.next());
+        assertEquals("Joakim", iterator.next());
+        assertFalse(iterator.hasNext());
+        /*!
+        The filtered iterator does not contain the name *Daniel*.
+        
+        The function used to filter looks like this:
+        >>>>
+        #{clazz('com.agical.jambda.demo.DemoFunctions').acceptStringsStartingWithJ}
+        <<<<
+        
+        */
     }
-
-
-
 }
