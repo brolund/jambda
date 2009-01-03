@@ -6,4 +6,4 @@
    - Add support for some basic parallelism.
    - Convenience-funktions to create sequences.
    - Pre-cooked functions library
-   
+   - Rewrite everything in Sequence as lazy sequences (and remove Cell etc.)   

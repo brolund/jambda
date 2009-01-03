@@ -1,8 +1,6 @@
 package com.agical.jambda.demo.practical;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -23,7 +21,7 @@ public class CreatingATemplateEngine {
         
         In this case we want to render a list of links as a main menu.
         */
-        List<Link> links = createLinks();
+    	Iterable<Link> links = createLinks();
         
         Fn2<String, String, String> stackAccumulator = new Fn2<String, String, String>() {
             public String apply(String string, String accumulator) {
@@ -50,12 +48,10 @@ public class CreatingATemplateEngine {
         };
     }
 
-    private List<Link> createLinks() throws Exception {
-        ArrayList<Link> links = new ArrayList<Link>();
-        links.add(new Link("Agical", new URL("http://www.agical.com")));
-        links.add(new Link("Agile Sweden", new URL("http://www.agilesweden.se")));
-        links.add(new Link("Agile alliance", new URL("http://www.agilealliance.org")));
-        return links;
+    private Iterable<Link> createLinks() throws Exception {
+        return Sequence.createSequence(
+        		new Link("Agical", new URL("http://www.agical.com")),
+        		new Link("Agile Sweden", new URL("http://www.agilesweden.se")),
+        		new Link("Agile alliance", new URL("http://www.agilealliance.org")));
     }
-    
 }

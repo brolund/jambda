@@ -1,7 +1,5 @@
 package com.agical.jambda;
 
-import java.util.NoSuchElementException;
-
 import com.agical.jambda.Tuples.*;
 
 public class Functions {
