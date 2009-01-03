@@ -1,9 +1,9 @@
 
 *** Wild and crazy ideas. Or not.
    - JambdaIterator with Option<T> instead of next()/hasNext()
-   - Y-combinator
-   - Unit
+   - Y-combinator (unless we accept references to this from within an apply-method...)
    - Handle "Pure" funktions somehow. (annotations, constructor argument ...)
-   - Add support som basic parallellism.
+   - Add support for some basic parallellism.
    - Convenience-funktions to create sequences.
    - Pre-cooked functions library
+   - Sequence vs. Sequence.Empty needs to be cleaned up.
