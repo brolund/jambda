@@ -33,7 +33,8 @@ public class DemoFunctions {
         };
     }
     
-    public static Fn0<Greeting> typedAnonymousGreeting = Functions.<Greeting>constantly(new Greeting("Hello!"));
+    public static Fn0<Greeting> typedAnonymousGreeting = 
+    	Functions.<Greeting>constantly(new Greeting("Hello!"));
     
     public static Fn1<String, User> userCreator() {
         return new Fn1<String, User>() {

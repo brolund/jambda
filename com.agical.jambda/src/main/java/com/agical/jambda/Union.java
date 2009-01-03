@@ -28,7 +28,7 @@ public abstract class Union<TLeft, TRight> {
 		}
 
 		@Override
-		public String toString() {
+		public java.lang.String toString() {
 			return content.toString();
 		}
 	}
@@ -48,7 +48,7 @@ public abstract class Union<TLeft, TRight> {
 		}
 
 		@Override
-		public String toString() {
+		public java.lang.String toString() {
 			return content.toString();
 		}
 	}
