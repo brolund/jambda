@@ -122,16 +122,22 @@ public class UsingSequence {
         =Sequence= can be used as a *sequence factory* to create new 
         sequences. Here, we create a never-ending sequence of integers:
         */
-        Iterator<Integer> range = Sequence.range(new Fn1<Integer, Integer>() {
+        Fn1<Integer, Integer> incrementor = new Fn1<Integer, Integer>() {
             public Integer apply(Integer previous) {
                 return previous+1;
             }
-        }, 0);
+        };
+        
+        Iterator<Integer> range = Sequence.range(incrementor, 0);
+        
         assertEquals(new Integer(0), range.next());
         assertEquals(new Integer(1), range.next());
         assertEquals(new Integer(2), range.next());
         /*!
-        
+        Note that =range(...)= takes a *generic* incrementor that calculates the 
+        next value in the sequence, hence your range can contain objects of any 
+        type. The seed is the first value for the range and must be of the same 
+        generic type as the incrementor. 
         */
         
     }
