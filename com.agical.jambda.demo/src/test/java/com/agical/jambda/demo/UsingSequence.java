@@ -47,6 +47,33 @@ public class UsingSequence {
     }
     
     @Test
+    public void mappingACollectionToMultpleResultsPerElement() throws Exception {
+    	/*!
+        To be written ...
+        */
+    	Iterable<Integer> ordinals = Sequence.createSequence(1, 2);
+        
+        Iterable<User> users = 
+        	Sequence.mapFlat(
+        			ordinals, 
+        			new Fn1<Integer, Iterable<User>>() {
+        				public Iterable<User> apply(Integer i) {
+        					return Sequence.map(Sequence.createSequence("Daniel" + i, "Johan" + i, "Joakim" + i), userCreator());
+        				}
+        			});
+        Iterator<User> iterator = users.iterator();
+        assertEquals("Daniel1", iterator.next().getName());
+        assertEquals("Johan1", iterator.next().getName());
+        assertEquals("Joakim1", iterator.next().getName());
+        assertEquals("Daniel2", iterator.next().getName());
+        assertEquals("Johan2", iterator.next().getName());
+        assertEquals("Joakim2", iterator.next().getName());
+        /*!
+        
+        */
+    }
+    
+    @Test
     public void theFoldFunctions() throws Exception {
         /*!
         The =map= function uses one of the *fold* functions: =foldLeft= or =foldRight=.

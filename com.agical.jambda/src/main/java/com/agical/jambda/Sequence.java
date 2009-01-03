@@ -104,6 +104,40 @@ public abstract class Sequence<T> implements Iterable<T> {
 				new Empty<TTarget>());
 	}
 	
+	public static <TSource, TTarget> Iterable<TTarget> mapFlat(Iterable<TSource> source, final Fn1<TSource, Iterable<TTarget>> selector) {
+		return foldRight(
+				source,
+				new Fn2<TSource, Sequence<TTarget>, Sequence<TTarget>>() {
+					public Sequence<TTarget> apply(TSource element, Sequence<TTarget> acc) {
+						return foldRight(
+								selector.apply(element),
+								new Fn2<TTarget, Sequence<TTarget>, Sequence<TTarget>>() {
+									public Sequence<TTarget> apply(TTarget element, Sequence<TTarget> acc2) {
+										return new Cell<TTarget>(element, acc2);
+									}
+								},
+								acc);
+					}
+				},
+				new Empty<TTarget>());
+	}
+	
+	/**
+	 * Creates a sequence, its elements are calculated from the function and the elements of input sequences occuring 
+	 * at the same position in both sequences.
+	 */
+	public static <TSource1, TSource2, TTarget> Iterable<TTarget> zipWith(Iterable<TSource1> s1, Iterable<TSource2> s2, 
+			final Fn2<TSource1, TSource2, TTarget> selector) {
+		return zipWith(s1.iterator(), s2.iterator(), selector);
+	}
+	
+	private static <TSource1, TSource2, TTarget> Sequence<TTarget> zipWith(Iterator<TSource1> i1, Iterator<TSource2> i2, 
+			final Fn2<TSource1, TSource2, TTarget> selector) {
+		return (i1.hasNext() && i2.hasNext())
+			? new Cell<TTarget>(selector.apply(i1.next(), i2.next()), zipWith(i1, i2, selector))
+			: new Empty<TTarget>();
+	}
+	
 	// Filters a sequence of values based on a predicate.
 	public static <T> Iterable<T> filter(Iterable<T> source, final Fn1<T, Boolean> predicate) {
 		return foldRight(

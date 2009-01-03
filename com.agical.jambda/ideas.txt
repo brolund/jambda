@@ -6,5 +6,4 @@
    - Add support for some basic parallelism.
    - Convenience-funktions to create sequences.
    - Pre-cooked functions library
-   - Sequence vs. Sequence.Empty needs to be cleaned up.
    
