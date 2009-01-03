@@ -1,5 +1,7 @@
 package com.agical.jambda;
 
+import com.agical.jambda.Functions.Fn1;
+
 public class Tuples {
     
     public static <T1, T2> Tuple2<T1, T2> duo(T1 t1, T2 t2) {
@@ -38,6 +40,22 @@ public class Tuples {
 		public T2 getSecond() {
 			return this.second;
 		}
+		
+		public static <T1, T2> Fn1<Tuple2<T1, T2>, T1> firstGetter() {
+		    return new Fn1<Tuple2<T1, T2>, T1>() {
+    		    public T1 apply(Tuple2<T1, T2> tuple) {
+                    return tuple.getFirst();
+                }
+		    };
+		}
+		
+		public static <T1, T2> Fn1<Tuple2<T1, T2>, T2> secondGetter() {
+            return new Fn1<Tuple2<T1, T2>, T2>() {
+                public T2 apply(Tuple2<T1, T2> tuple) {
+                    return tuple.getSecond();
+                }
+            };
+        }
 	}
 		
 	

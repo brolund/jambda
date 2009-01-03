@@ -5,13 +5,13 @@ import static com.agical.jambda.Sequence.*;
 
 public class Numeric {
 	
-	public static class Integer {
+	public static class Integers {
 		/**
 		 * @return Addition function for Integers
 		 */
-		public static Fn2<java.lang.Integer, java.lang.Integer, java.lang.Integer> plus =
-			new Fn2<java.lang.Integer, java.lang.Integer, java.lang.Integer>() {
-				public java.lang.Integer apply(java.lang.Integer arg1, java.lang.Integer arg2) {
+		public static Fn2<Integer, Integer, Integer> plus =
+			new Fn2<Integer, Integer, Integer>() {
+				public Integer apply(Integer arg1, Integer arg2) {
 					return arg1 + arg2;
 				}
 			};
@@ -19,58 +19,101 @@ public class Numeric {
 		/**
 		 * @return Multiplication function for Integers
 		 */
-		public static Fn2<java.lang.Integer, java.lang.Integer, java.lang.Integer> multiply =
-			new Fn2<java.lang.Integer, java.lang.Integer, java.lang.Integer>() {
-				public java.lang.Integer apply(java.lang.Integer arg1, java.lang.Integer arg2) {
+		public static Fn2<Integer, Integer, Integer> multiply =
+			new Fn2<Integer, Integer, Integer>() {
+				public Integer apply(Integer arg1, Integer arg2) {
 					return arg1 * arg2;
 				}
 			};
-		
-		public static java.lang.Integer sum(final Iterable<java.lang.Integer> source) {
+			
+		public static Fn2<Integer, Integer, Integer> modulo =
+            new Fn2<Integer, Integer, Integer>() {
+                public Integer apply(Integer arg1, Integer arg2) {
+                    return arg2 % arg1;
+                }
+            };
+			
+        public static Fn2<Integer, Integer, Boolean> equals =
+            new Fn2<Integer, Integer, Boolean>() {
+                 public Boolean apply(Integer arg1, Integer arg2) {
+                    return arg1 == arg2;
+                }
+            };
+                
+        public static Fn2<Integer, Integer, Boolean> greaterThen =
+            new Fn2<Integer, Integer, Boolean>() {
+                 public Boolean apply(Integer arg1, Integer arg2) {
+                    return arg1 > arg2;
+                }
+            };
+
+        
+        public static Fn2<Integer, Integer, Boolean> smallerThen =
+            new Fn2<Integer, Integer, Boolean>() {
+                 public Boolean apply(Integer arg1, Integer arg2) {
+                    return arg1 < arg2;
+                }
+            };
+            
+        public static Integer sum(final Iterable<Integer> source) {
 			return foldLeft(source, plus, 0);
 		}
 		
-		public static java.lang.Integer product(final Iterable<java.lang.Integer> source) {
+		public static Integer product(final Iterable<Integer> source) {
 			return foldLeft(source, multiply, 1);
 		}
 		
-		public static java.lang.Integer average(final Iterable<java.lang.Integer> source) {
+		public static Integer average(final Iterable<Integer> source) {
 			return foldLeft(source, plus, 0) / count(source);
 		}
 
 	}
 	
-	public static class Double {
+	public static class Doubles {
 		/**
 		 * @return Addition function for Doubles
 		 */
-		public static Fn2<java.lang.Double, java.lang.Double, java.lang.Double> plus =
-			new Fn2<java.lang.Double, java.lang.Double, java.lang.Double>() {
-				public java.lang.Double apply(java.lang.Double arg1, java.lang.Double arg2) {
+		public static Fn2<Double, Double, Double> plus =
+			new Fn2<Double, Double, Double>() {
+				public Double apply(Double arg1, Double arg2) {
 					return arg1 + arg2;
 				}
 			};
-		
+			
 		/**
 		 * @return Multiplication function for Doubles
 		 */
-		public static Fn2<java.lang.Double, java.lang.Double, java.lang.Double> multiply =
-			new Fn2<java.lang.Double, java.lang.Double, java.lang.Double>() {
-				public java.lang.Double apply(java.lang.Double arg1, java.lang.Double arg2) {
+		public static Fn2<Double, Double, Double> multiply =
+			new Fn2<Double, Double, Double>() {
+				public Double apply(Double arg1, Double arg2) {
 					return arg1 * arg2;
 				}
 			};
 		
-	
-		public static java.lang.Double sum(final Iterable<java.lang.Double> source) {
+        public static Fn2<Double, Double, Boolean> greaterThen =
+            new Fn2<Double, Double, Boolean>() {
+                public Boolean apply(Double arg1, Double arg2) {
+                    return arg1 > arg2;
+                }
+            };
+
+        
+        public static Fn2<Double, Double, Boolean> smallerThen =
+            new Fn2<Double, Double, Boolean>() {
+                public Boolean apply(Double arg1, Double arg2) {
+                    return arg1 < arg2;
+                }
+            };
+           
+		public static Double sum(final Iterable<Double> source) {
 			return foldLeft(source, plus, 0d);
 		}
 		
-		public static java.lang.Double product(final Iterable<java.lang.Double> source) {
+		public static Double product(final Iterable<Double> source) {
 			return foldLeft(source, multiply, 1d);
 		}
 		
-		public static java.lang.Double average(final Iterable<java.lang.Double> source) {
+		public static Double average(final Iterable<Double> source) {
 			return foldLeft(source, plus, 0d) / count(source);
 		}
 	}

@@ -93,15 +93,16 @@ public abstract class Sequence<T> implements Iterable<T> {
     }
 	
     // Projects each element of a sequence into a new form.
-	public static <TSource, TTarget> Iterable<TTarget> map(Iterable<TSource> source, final Fn1<TSource, TTarget> selector) {
-		return foldRight(
-				source,
-				new Fn2<TSource, Sequence<TTarget>, Sequence<TTarget>>() {
-					public Sequence<TTarget> apply(TSource element, Sequence<TTarget> acc) {
-						return new Cell<TTarget>(selector.apply(element), acc);
-					}
-				},
-				new Empty<TTarget>());
+	public static <TSource, TTarget> Iterable<TTarget> map(final Iterable<TSource> source, final Fn1<TSource, TTarget> selector) {
+		return new Iterable<TTarget>() {
+		     public Iterator<TTarget> iterator() {
+		         final Iterator<TSource> sourceIterator = source.iterator();
+                return new UnmodifiableIterator<TTarget>() {
+                    public boolean hasNext() { return sourceIterator.hasNext(); }
+                    public TTarget next() { return selector.apply(sourceIterator.next()); }
+                };
+            }
+		};
 	}
 	
 	public static <TSource, TTarget> Iterable<TTarget> mapFlat(Iterable<TSource> source, final Fn1<TSource, Iterable<TTarget>> selector) {
@@ -148,6 +149,25 @@ public abstract class Sequence<T> implements Iterable<T> {
 					}
 				},
 				new Empty<T>());
+	}
+	
+	/**
+	 * Returns elements from a sequence as long as a specified condition is true.
+	 */
+	public static <T> Iterable<T> takeWhile(Iterable<T> source, final Fn1<T, Boolean> predicate) {
+        return takeWhile(source.iterator(), predicate);
+    }
+	
+	private static <T> Sequence<T> takeWhile(Iterator<T> i, final Fn1<T, Boolean> predicate) {
+	    if(i.hasNext()) {
+	        T element = i.next();
+	        
+	        return predicate.apply(element)
+	            ? new Cell<T>(element, takeWhile(i, predicate))
+	            : new Empty<T>();
+	    }
+	    else
+	        return new Empty<T>();
 	}
 	
 	// Determines whether all elements of a sequence satisfy a condition.
@@ -245,26 +265,28 @@ public abstract class Sequence<T> implements Iterable<T> {
 	 * @param seed The first value of the range
 	 * @return The iterator.
 	 */
-    public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final T seed) {
+    public static <T> Iterable<T> range(final Fn1<T, T> incrementor, final T seed) {
         return range(incrementor, Functions.<T, Boolean>constantly(true), seed);
     }
     
-    public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final Fn1<T, Boolean> limiter, final T seed) {
-        return new UnmodifiableIterator<T>() {
-            T current = seed;
-            public boolean hasNext() {
-                return limiter.apply(current);
-            }
+    public static <T> Iterable<T> range(final Fn1<T, T> incrementor, final Fn1<T, Boolean> limiter, final T seed) {
+        return new Iterable<T>() {
+            public Iterator<T> iterator() {
+                return new UnmodifiableIterator<T>() {
+                    T current = seed;
+                    public boolean hasNext() {
+                        return limiter.apply(current);
+                    }
 
-            public T next() {
-                T curr = current;
-                current = limiter.apply(current)?incrementor.apply(current):current;
-                return curr;
+                    public T next() {
+                        T curr = current;
+                        current = limiter.apply(current)?incrementor.apply(current):current;
+                        return curr;
+                    }
+                };
             }
         };
     }
-    
-    
     
     private static abstract class UnmodifiableIterator<E> implements Iterator<E> {
         public void remove() {

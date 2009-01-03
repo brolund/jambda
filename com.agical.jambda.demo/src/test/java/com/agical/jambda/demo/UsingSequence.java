@@ -148,11 +148,11 @@ public class UsingSequence {
             }
         };
         
-        Iterator<Integer> range = Sequence.range(incrementor, 0);
-        
-        assertEquals(new Integer(0), range.next());
-        assertEquals(new Integer(1), range.next());
-        assertEquals(new Integer(2), range.next());
+        Iterable<Integer> range = Sequence.range(incrementor, 0);
+        Iterator<Integer> rangeIterator = range.iterator();
+        assertEquals(new Integer(0), rangeIterator.next());
+        assertEquals(new Integer(1), rangeIterator.next());
+        assertEquals(new Integer(2), rangeIterator.next());
         /*!
         Note that =range(...)= takes a *generic* incrementor that calculates the 
         next value in the sequence, hence your range can contain objects of any 
@@ -167,11 +167,12 @@ public class UsingSequence {
                 return number<limit;
             }
         };
-        Iterator<Integer> limitedRange = Sequence.range(incrementor, limiter, 0);
+        Iterable<Integer> limitedRange = Sequence.range(incrementor, limiter, 0);
+        Iterator<Integer> limitedRangeIterator = limitedRange.iterator();
         
-        assertEquals(new Integer(0), limitedRange.next());
-        assertEquals(new Integer(1), limitedRange.next());
-        assertFalse(limitedRange.hasNext());
+        assertEquals(new Integer(0), limitedRangeIterator.next());
+        assertEquals(new Integer(1), limitedRangeIterator.next());
+        assertFalse(limitedRangeIterator.hasNext());
         
         /*!
          
