@@ -31,12 +31,9 @@ public class UsingSequence {
         want to create a new collection of the same size, but with new data based on
         the data in the original collection.
         
-        In this case we have a list of names, and we want to create a list of =User= objects: 
+        In this case we have a sequence of names, and we want to create a list of =User= objects: 
         */
-        List<String> userNames = new ArrayList<String>();
-        userNames.add("Daniel");
-        userNames.add("Johan");
-        userNames.add("Joakim");
+        Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
         
         Iterable<User> users = Sequence.map(userNames, userCreator());
         Iterator<User> iterator = users.iterator();
@@ -50,18 +47,43 @@ public class UsingSequence {
     }
     
     @Test
+    public void mappingACollectionToMultpleResultsPerElement() throws Exception {
+        /*!
+        To be written ...
+        */
+        Iterable<Integer> ordinals = Sequence.createSequence(1, 2);
+        
+        Iterable<User> users = 
+        	Sequence.mapFlat(
+        			ordinals, 
+        			new Fn1<Integer, Iterable<User>>() {
+        				public Iterable<User> apply(Integer i) {
+        					return Sequence.map(Sequence.createSequence("Daniel" + i, "Johan" + i, "Joakim" + i), userCreator());
+        				}
+        			});
+        Iterator<User> iterator = users.iterator();
+        assertEquals("Daniel1", iterator.next().getName());
+        assertEquals("Johan1", iterator.next().getName());
+        assertEquals("Joakim1", iterator.next().getName());
+        assertEquals("Daniel2", iterator.next().getName());
+        assertEquals("Johan2", iterator.next().getName());
+        assertEquals("Joakim2", iterator.next().getName());
+        /*!
+        To be written
+        */
+    }
+    
+    @Test
     public void theFoldFunctions() throws Exception {
         /*!
         The =map= function uses one of the *fold* functions: =foldLeft= or =foldRight=.
         The fold functions can be used to either map a collection to another, like we saw in the =map= example,
         or it can be used to aggregate or accumulate data, which we will show now.
         
-        Let us start with a normal list containing some names:
+        Let us start with a sequence containing some names:
         */
-        List<String> userNames = new ArrayList<String>();
-        userNames.add("Daniel");
-        userNames.add("Johan");
-        userNames.add("Joakim");
+    	Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
+    	
         /*!
         Now we will use an aggregating function to create a string:
         >>>>
@@ -94,12 +116,9 @@ public class UsingSequence {
         /*!
         Other times you have a collection of data and you want to filter out some of the elements.
         
-        We have the same list of names, but we only want the names that start with *J*: 
+        We have the same sequence of names, but we only want the names that start with *J*: 
         */
-        List<String> userNames = new ArrayList<String>();
-        userNames.add("Daniel");
-        userNames.add("Johan");
-        userNames.add("Joakim");
+        Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
         
         Iterable<String> users = Sequence.filter(userNames, acceptStringsStartingWithJ());
         Iterator<String> iterator = users.iterator();
@@ -142,10 +161,10 @@ public class UsingSequence {
         
         If you want a limited range, provide a limiter:
         */
-        Fn1<Integer, Option<Integer>> limiter = new Fn1<Integer, Option<Integer>>() {
-            public Option<Integer> apply(Integer number) {
+        Fn1<Integer, Boolean> limiter = new Fn1<Integer, Boolean>() {
+            public Boolean apply(Integer number) {
                 int limit = 2;
-                return number<limit?Option.some(number):Option.<Integer>none();
+                return number<limit;
             }
         };
         Iterator<Integer> limitedRange = Sequence.range(incrementor, limiter, 0);

@@ -25,7 +25,7 @@ public class UsingOptions {
         with the data to be provided, in this case a =User=. 
         */
         Option<User> user = Option.some(new User("Daniel"));
-        Greeting greeting = user.map(typedPersonalGreeting(), typedAnonymousGreeting());
+        Greeting greeting = user.map(typedPersonalGreeting(), typedAnonymousGreeting);
         assertEquals("Hello, Daniel!", greeting.getGreeting());
         /*!
         The =map= method takes two functions:
@@ -42,7 +42,7 @@ public class UsingOptions {
         Since it represents no data available, no data need to be provided. 
         */
         Option<User> option = Option.none();
-        Greeting greeting = option.map(typedPersonalGreeting(), typedAnonymousGreeting());
+        Greeting greeting = option.map(typedPersonalGreeting(), typedAnonymousGreeting);
         assertEquals("Hello!", greeting.getGreeting());
         /*!
         In this case, the second function will be used to create the =Greeting=.

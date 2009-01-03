@@ -1,5 +1,6 @@
 package com.agical.jambda.demo;
 
+import com.agical.jambda.Functions;
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
@@ -32,13 +33,8 @@ public class DemoFunctions {
         };
     }
     
-    public static Fn0<Greeting> typedAnonymousGreeting() {
-        return new Fn0<Greeting>() {
-            public Greeting apply() {
-                return new Greeting("Hello!");
-            }
-        };
-    }
+    public static Fn0<Greeting> typedAnonymousGreeting = 
+    	Functions.<Greeting>constantly(new Greeting("Hello!"));
     
     public static Fn1<String, User> userCreator() {
         return new Fn1<String, User>() {
