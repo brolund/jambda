@@ -21,7 +21,7 @@ public class CreatingATemplateEngine {
         
         In this case we want to render a list of links as a main menu.
         */
-    	Iterable<Link> links = createLinks();
+        Iterable<Link> links = createLinks();
         
         Fn2<String, String, String> stackAccumulator = new Fn2<String, String, String>() {
             public String apply(String string, String accumulator) {

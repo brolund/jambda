@@ -48,10 +48,10 @@ public class UsingSequence {
     
     @Test
     public void mappingACollectionToMultpleResultsPerElement() throws Exception {
-    	/*!
+        /*!
         To be written ...
         */
-    	Iterable<Integer> ordinals = Sequence.createSequence(1, 2);
+        Iterable<Integer> ordinals = Sequence.createSequence(1, 2);
         
         Iterable<User> users = 
         	Sequence.mapFlat(
@@ -69,7 +69,7 @@ public class UsingSequence {
         assertEquals("Johan2", iterator.next().getName());
         assertEquals("Joakim2", iterator.next().getName());
         /*!
-        
+        To be written
         */
     }
     
@@ -161,10 +161,10 @@ public class UsingSequence {
         
         If you want a limited range, provide a limiter:
         */
-        Fn1<Integer, Option<Integer>> limiter = new Fn1<Integer, Option<Integer>>() {
-            public Option<Integer> apply(Integer number) {
+        Fn1<Integer, Boolean> limiter = new Fn1<Integer, Boolean>() {
+            public Boolean apply(Integer number) {
                 int limit = 2;
-                return number<limit?Option.some(number):Option.<Integer>none();
+                return number<limit;
             }
         };
         Iterator<Integer> limitedRange = Sequence.range(incrementor, limiter, 0);

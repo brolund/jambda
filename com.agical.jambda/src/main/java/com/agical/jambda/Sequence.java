@@ -63,7 +63,7 @@ public abstract class Sequence<T> implements Iterable<T> {
 	    }
 
 	    public T next() {
-	    	// ElŠnde...
+	    	// Elï¿½nde...
 	    	T element = this.sequence.head().escape(
 	    			new Fn0<T>() { public T apply() { throw new NoSuchElementException(); } });
 	    	this.sequence = this.sequence.tail();
@@ -246,22 +246,19 @@ public abstract class Sequence<T> implements Iterable<T> {
 	 * @return The iterator.
 	 */
     public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final T seed) {
-        return range(incrementor, new Fn1<T, Option<T>>() {
-            public Option<T> apply(T arg) {
-                return Option.some(arg);
-            }}, seed);
+        return range(incrementor, Functions.<T, Boolean>constantly(true), seed);
     }
     
-    public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final Fn1<T, Option<T>> limiter, final T seed) {
+    public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final Fn1<T, Boolean> limiter, final T seed) {
         return new UnmodifiableIterator<T>() {
             T current = seed;
             public boolean hasNext() {
-                return limiter.apply(current).map(Functions.<T, Boolean>constantly(true), Functions.<Boolean>constantly(false));
+                return limiter.apply(current);
             }
 
             public T next() {
                 T curr = current;
-                current = limiter.apply(current).map(incrementor, Functions.<T>constantly(current));
+                current = limiter.apply(current)?incrementor.apply(current):current;
                 return curr;
             }
         };
