@@ -10,21 +10,21 @@ import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 
-public class Cons<T> implements Iterable<T> {
+public class Sequence<T> implements Iterable<T> {
 	public final Option<T> head;
-	public final Cons<T> tail;
+	public final Sequence<T> tail;
 
-	public Cons(T head) {
+	public Sequence(T head) {
 		this.head = some(head);
-		this.tail = new Cons<T>();
+		this.tail = new Sequence<T>();
 	}
 	
-	public Cons(T head, Cons<T> tail) {
+	public Sequence(T head, Sequence<T> tail) {
 		this.head = some(head);
 		this.tail = tail;
 	}
 	
-	private Cons() {
+	private Sequence() {
 		this.head = none();
 		this.tail = this;
 	}
@@ -34,32 +34,28 @@ public class Cons<T> implements Iterable<T> {
 		return new ConsIterator(this);
 	}
 	
-	public static class Empty<TC> extends Cons<TC> {
+	public static class Empty<TC> extends Sequence<TC> {
 		public Option<TC> head() { return none(); }
-		public Cons<TC> tail() { return this; };
+		public Sequence<TC> tail() { return this; };
 	}
 	
-	public class ConsIterator implements Iterator<T> {
-	    private Cons<T> cons;
+	public class ConsIterator extends UnmodifiableIterator<T> {
+	    private Sequence<T> sequence;
 	    
-	    public ConsIterator(Cons<T> cons) {
-	        this.cons = cons;
+	    public ConsIterator(Sequence<T> cons) {
+	        this.sequence = cons;
 	    }
 
 	    public boolean hasNext() {
-	    	return this.cons.head.isSome();
+	    	return this.sequence.head.isSome();
 	    }
 
 	    public T next() {
 	    	// El�nde...
-	    	T element = this.cons.head.escape(
+	    	T element = this.sequence.head.escape(
 	    			new Fn0<T>() { public T apply() { throw new NoSuchElementException(); } });
-	    	this.cons = this.cons.tail;
+	    	this.sequence = this.sequence.tail;
 	    	return element;
-	    }
-
-	    public void remove() {
-	        throw new UnsupportedOperationException("Options does not support remove.");
 	    }
 	}
 	
@@ -87,9 +83,9 @@ public class Cons<T> implements Iterable<T> {
 	public static <TSource, TTarget> Iterable<TTarget> map(Iterable<TSource> source, final Fn1<TSource, TTarget> selector) {
 		return foldRight(
 				source,
-				new Fn2<TSource, Cons<TTarget>, Cons<TTarget>>() {
-					public Cons<TTarget> apply(TSource element, Cons<TTarget> acc) {
-						return new Cons<TTarget>(selector.apply(element), acc);
+				new Fn2<TSource, Sequence<TTarget>, Sequence<TTarget>>() {
+					public Sequence<TTarget> apply(TSource element, Sequence<TTarget> acc) {
+						return new Sequence<TTarget>(selector.apply(element), acc);
 					}
 				},
 				new Empty<TTarget>());
@@ -98,11 +94,32 @@ public class Cons<T> implements Iterable<T> {
 	public static <T> Iterable<T> filter(Iterable<T> source, final Fn1<T, Boolean> predicate) {
 		return foldRight(
 				source,
-				new Fn2<T, Cons<T>, Cons<T>>() {
-					public Cons<T> apply(T element, Cons<T> acc) {
-						return (predicate.apply(element)) ? new Cons<T>(element, acc) : acc;
+				new Fn2<T, Sequence<T>, Sequence<T>>() {
+					public Sequence<T> apply(T element, Sequence<T> acc) {
+						return (predicate.apply(element)) ? new Sequence<T>(element, acc) : acc;
 					}
 				},
 				new Empty<T>());
 	}
+
+    public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final T seed) {
+        return new UnmodifiableIterator<T>() {
+            T current = seed;
+            public boolean hasNext() {
+                return true;
+            }
+
+            public T next() {
+                T curr = current;
+                current = incrementor.apply(curr);
+                return curr;
+            }
+        };
+    }
+    
+    private static abstract class UnmodifiableIterator<E> implements Iterator<E> {
+        public void remove() {
+            throw new UnsupportedOperationException("Options does not support remove.");
+        }
+    }
 }

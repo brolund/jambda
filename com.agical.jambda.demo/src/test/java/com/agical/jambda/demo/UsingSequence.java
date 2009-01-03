@@ -2,6 +2,7 @@ package com.agical.jambda.demo;
 
 import static com.agical.bumblebee.junit4.Storage.store;
 import static com.agical.jambda.demo.DemoFunctions.*;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -11,12 +12,13 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.agical.jambda.Cons;
+import com.agical.jambda.Sequence;
+import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 
-public class UsingCons {
+public class UsingSequence {
     /*!
-    The *Cons* is a construct for handling collections, e.g. 
+    The *Sequence* is a construct for handling collections, e.g. 
        - Filtering to a new, smaller, collection
        - Mapping or transforming to a new collection of the same size
        - Aggregation of a collection to a single value
@@ -35,7 +37,7 @@ public class UsingCons {
         userNames.add("Johan");
         userNames.add("Joakim");
         
-        Iterable<User> users = Cons.map(userNames, userCreator());
+        Iterable<User> users = Sequence.map(userNames, userCreator());
         Iterator<User> iterator = users.iterator();
         assertEquals("Daniel", iterator.next().getName());
         assertEquals("Johan", iterator.next().getName());
@@ -69,8 +71,8 @@ public class UsingCons {
         
         Then we use the =foldLeft= and the =foldRight= respectively to apply the function to the list of names
         */
-        String foldLeft = Cons.foldLeft(userNames, aggregateStrings(), "");
-        String foldRight = Cons.foldRight(userNames, aggregateStrings(), "");
+        String foldLeft = Sequence.foldLeft(userNames, aggregateStrings(), "");
+        String foldRight = Sequence.foldRight(userNames, aggregateStrings(), "");
         /*!
         The results are 
         >>>>
@@ -98,7 +100,7 @@ public class UsingCons {
         userNames.add("Johan");
         userNames.add("Joakim");
         
-        Iterable<String> users = Cons.filter(userNames, acceptStringsStartingWithJ());
+        Iterable<String> users = Sequence.filter(userNames, acceptStringsStartingWithJ());
         Iterator<String> iterator = users.iterator();
         assertEquals("Johan", iterator.next());
         assertEquals("Joakim", iterator.next());
@@ -114,5 +116,24 @@ public class UsingCons {
         */
     }
     
+    @Test
+    public void creatingNewSequences() throws Exception {
+        /*!
+        =Sequence= can be used as a *sequence factory* to create new 
+        sequences. Here, we create a never-ending sequence of integers:
+        */
+        Iterator<Integer> range = Sequence.range(new Fn1<Integer, Integer>() {
+            public Integer apply(Integer previous) {
+                return previous+1;
+            }
+        }, 0);
+        assertEquals(new Integer(0), range.next());
+        assertEquals(new Integer(1), range.next());
+        assertEquals(new Integer(2), range.next());
+        /*!
+        
+        */
+        
+    }
     
 }

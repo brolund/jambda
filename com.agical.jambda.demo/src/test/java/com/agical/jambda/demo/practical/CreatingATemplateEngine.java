@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
-import com.agical.jambda.Cons;
+import com.agical.jambda.Sequence;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 
@@ -31,7 +31,7 @@ public class CreatingATemplateEngine {
             }
         };
         
-        String result = Cons.foldLeft(Cons.map(links, linkToString()), stackAccumulator, "");
+        String result = Sequence.foldLeft(Sequence.map(links, linkToString()), stackAccumulator, "");
         /*!
         =createLinks()= creates a bunch of links for us.
         The =result= is:

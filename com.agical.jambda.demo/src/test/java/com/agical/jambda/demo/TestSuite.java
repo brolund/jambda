@@ -11,7 +11,7 @@ import com.agical.jambda.demo.practical.PracticalUsages;
 
 @RunWith(BumbleBeeSuiteRunner.class)
 @BumblebeeCollectors({RubyCollector.class})
-@SuiteClasses({UsingFunctions.class, UsingOptions.class, UsingUnions.class, UsingCons.class, PracticalUsages.class})
+@SuiteClasses({UsingFunctions.class, UsingOptions.class, UsingUnions.class, UsingSequence.class, PracticalUsages.class})
 public class TestSuite {
 
 }
