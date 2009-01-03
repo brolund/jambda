@@ -29,7 +29,7 @@ public class Numeric {
 		public static Fn2<Integer, Integer, Integer> modulo =
             new Fn2<Integer, Integer, Integer>() {
                 public Integer apply(Integer arg1, Integer arg2) {
-                    return arg2 % arg1;
+                    return arg1 % arg2;
                 }
             };
 			

@@ -37,6 +37,15 @@ public class Functions {
             };
         }
         
+        public Fn1<T1, R> rightCurry(final T2 arg2) {
+            final Fn2<T1, T2, R> origFn = this;
+            return new Fn1<T1, R>() {
+                public R apply(T1 arg1) {
+                    return origFn.apply(arg1, arg2);
+                }
+            };
+        }
+        
         public R apply(Tuple2<T1, T2> arg) {
         	return this.apply(arg.getFirst(), arg.getSecond());
         }
@@ -140,11 +149,4 @@ public class Functions {
     public static <TX, TY, TZ> Fn1<TX, TZ> compose(final Fn1<TX, TY> f, final Fn1<TY, TZ> g) {
         return f.compose(g);
     }
-    
-    public static Fn1<Boolean, Boolean> negate = 
-        new Fn1<Boolean, Boolean>() {
-            public Boolean apply(Boolean arg) {
-                return !arg;
-            }
-        };
  }

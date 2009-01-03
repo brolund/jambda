@@ -46,7 +46,7 @@ public class Euler {
         
         Integer sum = 
             sum(filter(takeWhile(fibs, greaterThen.apply(4000000)), 
-                       modulo.apply(2).compose(equals.apply(0))));
+                       modulo.rightCurry(2).compose(equals.apply(0))));
         
         assertEquals(new Integer(4613732), sum);
     }
