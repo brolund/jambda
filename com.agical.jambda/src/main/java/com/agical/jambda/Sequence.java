@@ -10,51 +10,63 @@ import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 
-public class Sequence<T> implements Iterable<T> {
-	public final Option<T> head;
-	public final Sequence<T> tail;
+public abstract class Sequence<T> implements Iterable<T> {
+	public abstract Option<T> head();
+	public abstract Sequence<T> tail();
 
-	public Sequence(T head) {
-		this.head = some(head);
-		this.tail = new Sequence<T>();
-	}
-	
-	public Sequence(T head, Sequence<T> tail) {
-		this.head = some(head);
-		this.tail = tail;
-	}
-	
-	private Sequence() {
-		this.head = none();
-		this.tail = this;
-	}
-	
-	
 	public Iterator<T> iterator() {
-		return new ConsIterator(this);
+		return new SequenceIterator(this);
 	}
 	
-	public static class Empty<TC> extends Sequence<TC> {
+	public static <T> Iterable<T> createSequence(T ... elements) {
+		return createSequence(elements, 0);
+	}
+	
+	private static <T> Sequence<T> createSequence(T[] elements, int i){
+		return (i < elements.length)
+			? new Cell<T>(elements[i], createSequence(elements, i + 1))
+			: new Empty<T>();
+	}
+	
+	private static class Empty<TC> extends Sequence<TC> {
 		public Option<TC> head() { return none(); }
 		public Sequence<TC> tail() { return this; };
 	}
 	
-	public class ConsIterator extends UnmodifiableIterator<T> {
+	private static class Cell<TC> extends Sequence<TC> {
+		public final Option<TC> head;
+		public final Sequence<TC> tail;
+		
+		public Option<TC> head() { return this.head; }
+		public Sequence<TC> tail() { return this.tail; };
+
+		public Cell(TC head) {
+			this.head = some(head);
+			this.tail = new Empty<TC>();
+		}
+		
+		public Cell(TC head, Sequence<TC> tail) {
+			this.head = some(head);
+			this.tail = tail;
+		}
+	}
+	
+	public class SequenceIterator extends UnmodifiableIterator<T> {
 	    private Sequence<T> sequence;
 	    
-	    public ConsIterator(Sequence<T> cons) {
+	    public SequenceIterator(Sequence<T> cons) {
 	        this.sequence = cons;
 	    }
 
 	    public boolean hasNext() {
-	    	return this.sequence.head.isSome();
+	    	return this.sequence.head().isSome();
 	    }
 
 	    public T next() {
-	    	// Elï¿½nde...
-	    	T element = this.sequence.head.escape(
+	    	// ElŠnde...
+	    	T element = this.sequence.head().escape(
 	    			new Fn0<T>() { public T apply() { throw new NoSuchElementException(); } });
-	    	this.sequence = this.sequence.tail;
+	    	this.sequence = this.sequence.tail();
 	    	return element;
 	    }
 	}
@@ -86,7 +98,7 @@ public class Sequence<T> implements Iterable<T> {
 				source,
 				new Fn2<TSource, Sequence<TTarget>, Sequence<TTarget>>() {
 					public Sequence<TTarget> apply(TSource element, Sequence<TTarget> acc) {
-						return new Sequence<TTarget>(selector.apply(element), acc);
+						return new Cell<TTarget>(selector.apply(element), acc);
 					}
 				},
 				new Empty<TTarget>());
@@ -98,7 +110,7 @@ public class Sequence<T> implements Iterable<T> {
 				source,
 				new Fn2<T, Sequence<T>, Sequence<T>>() {
 					public Sequence<T> apply(T element, Sequence<T> acc) {
-						return (predicate.apply(element)) ? new Sequence<T>(element, acc) : acc;
+						return (predicate.apply(element)) ? new Cell<T>(element, acc) : acc;
 					}
 				},
 				new Empty<T>());
@@ -142,7 +154,13 @@ public class Sequence<T> implements Iterable<T> {
 				0);
 	}
 	
-	// Returns a number that represents how many elements in the specified sequence satisfy a condition.
+	/**
+	 * Returns a number that represents how many elements in the specified sequence satisfy a condition.
+	 * @param <T> The type of the iterator
+	 * @param source The sequence of elements to count
+	 * @param predicate The predicate function that the elements must satisfy 
+	 * @return The number of elements that satisfied the predicate function.
+	 */
 	public static <T> Integer count(final Iterable<T> source,  final Fn1<T, Boolean> predicate) {
 		return foldLeft(
 				source,
@@ -154,7 +172,13 @@ public class Sequence<T> implements Iterable<T> {
 				0);
 	}
 	
-	// Returns the first element in a sequence that satisfies a specified condition.
+	/**
+	 * Returns the first element in a sequence that satisfies a specified condition.
+	 * @param <T> The type of the iterator
+	 * @param source The sequence to search
+	 * @param predicate The predicate function that is applied to the elements.
+	 * @return The found element (or none)
+	 */
 	public static <T> Option<T> find(final Iterable<T> source,  final Fn1<T, Boolean> predicate) {
 		Iterator<T> iterator = source.iterator();
 		while(iterator.hasNext()) {
@@ -165,7 +189,13 @@ public class Sequence<T> implements Iterable<T> {
 		return none();
 	}
 	
-	// Performs the specified action on each element of the sequence
+	/**
+	 * Performs the specified action on each element of the sequence
+	 * @param <T> The type of the Iterator
+	 * @param source The iterator of the elements that the action should be applied
+	 * @param action The action to apply to each element of the iterator 
+	 * @return Unit
+	 */
 	public static <T> Unit forEach(final Iterable<T> source,  final Fn1<T, Unit> action) {
 		Iterator<T> iterator = source.iterator();
 		while(iterator.hasNext()) 

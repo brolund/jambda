@@ -1,5 +1,7 @@
 package com.agical.jambda;
 
+import java.util.NoSuchElementException;
+
 import com.agical.jambda.Tuples.*;
 
 public class Functions {
@@ -140,4 +142,4 @@ public class Functions {
     public static <TX, TY, TZ> Fn1<TX, TZ> compose(final Fn1<TX, TY> f, final Fn1<TY, TZ> g) {
         return f.compose(g);
     }
-}
+ }

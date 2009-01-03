@@ -31,12 +31,9 @@ public class UsingSequence {
         want to create a new collection of the same size, but with new data based on
         the data in the original collection.
         
-        In this case we have a list of names, and we want to create a list of =User= objects: 
+        In this case we have a sequence of names, and we want to create a list of =User= objects: 
         */
-        List<String> userNames = new ArrayList<String>();
-        userNames.add("Daniel");
-        userNames.add("Johan");
-        userNames.add("Joakim");
+        Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
         
         Iterable<User> users = Sequence.map(userNames, userCreator());
         Iterator<User> iterator = users.iterator();
@@ -56,12 +53,10 @@ public class UsingSequence {
         The fold functions can be used to either map a collection to another, like we saw in the =map= example,
         or it can be used to aggregate or accumulate data, which we will show now.
         
-        Let us start with a normal list containing some names:
+        Let us start with a sequence containing some names:
         */
-        List<String> userNames = new ArrayList<String>();
-        userNames.add("Daniel");
-        userNames.add("Johan");
-        userNames.add("Joakim");
+    	Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
+    	
         /*!
         Now we will use an aggregating function to create a string:
         >>>>
@@ -94,12 +89,9 @@ public class UsingSequence {
         /*!
         Other times you have a collection of data and you want to filter out some of the elements.
         
-        We have the same list of names, but we only want the names that start with *J*: 
+        We have the same sequence of names, but we only want the names that start with *J*: 
         */
-        List<String> userNames = new ArrayList<String>();
-        userNames.add("Daniel");
-        userNames.add("Johan");
-        userNames.add("Joakim");
+        Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
         
         Iterable<String> users = Sequence.filter(userNames, acceptStringsStartingWithJ());
         Iterator<String> iterator = users.iterator();

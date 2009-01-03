@@ -3,7 +3,7 @@ package com.agical.jambda;
 import com.agical.jambda.Functions.Fn0;
 
 /**
- * Delays encapsulates a delayed value that is calculated on demand.
+ * A Lazy container that encapsulates a value that is calculated on demand.
  * @author kullbom
  *
  * @param <T> The type of the encapsulated value.
