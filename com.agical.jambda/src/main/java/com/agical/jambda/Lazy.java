@@ -8,13 +8,13 @@ import com.agical.jambda.Functions.Fn0;
  *
  * @param <T> The type of the encapsulated value.
  */
-public class Delay<T> {
+public class Lazy<T> {
 	private final Fn0<T> forceFn;
 	// ToDo: Make threadsafe - mutable state...
 	private Option<T> value = Option.none();
 	
-	public Delay(final Fn0<T> contentFn) {
-		final Delay<T> self = this;
+	public Lazy(final Fn0<T> contentFn) {
+		final Lazy<T> self = this;
 		this.forceFn = 
 			new Fn0<T>() {
 				public T apply() {
@@ -26,7 +26,7 @@ public class Delay<T> {
 	}
 	
 	/**
-	 * Forces the value of the Delay to be calculated (and cached) 
+	 * Forces the value of the Lazy to be calculated (and cached) 
 	 * @return The cached or newly calculated value
 	 */
 	public T force() {
@@ -34,7 +34,7 @@ public class Delay<T> {
 	}
 	
 	/**
-	 * Resets the Delay to unforced state. The value will be recalculated at next force.
+	 * Resets the Lazy to unforced state. The value will be recalculated at next force.
 	 * @return Unit
 	 */
 	public Unit reset() {

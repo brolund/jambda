@@ -173,6 +173,14 @@ public class Sequence<T> implements Iterable<T> {
 		return Unit.unit;
 	}
 	
+	/**
+	 * This method creates a never-ending iterator of type T.
+	 * 
+	 * @param <T> The type of the Iterator.
+	 * @param incrementor The function that provides the next value, given the previous
+	 * @param seed The first value of the range
+	 * @return The iterator.
+	 */
     public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final T seed) {
         return range(incrementor, new Fn1<T, Option<T>>() {
             public Option<T> apply(T arg) {
