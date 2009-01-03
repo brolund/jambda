@@ -79,7 +79,9 @@ public class Cons<T> implements Iterable<T> {
     }
 
     public static <TTarget, TSource> TTarget foldRight(Iterator<TSource> iterator, Fn2<TSource, TTarget, TTarget> fn,TTarget accumulator) {
-        return iterator.hasNext()?fn.apply(iterator.next(), foldRight(iterator, fn, accumulator)):accumulator;
+        return iterator.hasNext()
+                    ? fn.apply(iterator.next(), foldRight(iterator, fn, accumulator))
+                    : accumulator;
     }
 	
 	public static <TSource, TTarget> Iterable<TTarget> map(Iterable<TSource> source, final Fn1<TSource, TTarget> selector) {

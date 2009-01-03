@@ -20,7 +20,8 @@ public class UsingFunctions {
     @Test
     public void theSimplestFunction() throws Exception {
         /*!
-        The simplest function is =Fn0=, which maps to a specific type from nothing:
+        The simplest function is =Fn0=, which maps to a specific type, in this 
+        case =String=, from nothing:
         */
         Fn0<String> anonymousGreeting = new Fn0<String>() {
             public String apply() {
@@ -29,7 +30,7 @@ public class UsingFunctions {
         };
         String greetingsPhrase = anonymousGreeting.apply();
         /*!
-        The =greeting= variable is:
+        The result is:
         >>>>
         #{greetingsPhrase}
         <<<<
@@ -46,20 +47,20 @@ public class UsingFunctions {
     @Test
     public void theMappingFunction() throws Exception {
         /*!
-        =Fn1= maps data from one type to another (or the same type).
+        =Fn1= maps data from one type to another, in this case =Integer= to =String=.
         */
-        String greetingsPhrase = personalGreeting().apply("Daniel");
+        String greetingsPhrase = personalGreeting().apply(new Integer(1));
         /*!
         The =greetingsPhrase= variable is:
         >>>>
         #{greetingsPhrase}
         <<<<
-        The implementation of =Fn1= is
+        The implementation of =personalGreeting()= is
         >>>>
         #{clazz('com.agical.jambda.demo.DemoFunctions').personalGreeting}
         <<<<
         */
-        assertEquals("Hello, Daniel!", greetingsPhrase);
+        assertEquals("Hello, nr 1!", greetingsPhrase);
         Storage.store("greetingsPhrase", greetingsPhrase);
     }
     

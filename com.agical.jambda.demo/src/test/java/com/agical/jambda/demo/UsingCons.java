@@ -53,7 +53,7 @@ public class UsingCons {
         The fold functions can be used to either map a collection to another, like we saw in the =map= example,
         or it can be used to aggregate or accumulate data, which we will show now.
         
-        Lets start with a normal list containing some names:
+        Let us start with a normal list containing some names:
         */
         List<String> userNames = new ArrayList<String>();
         userNames.add("Daniel");
@@ -113,4 +113,6 @@ public class UsingCons {
         
         */
     }
+    
+    
 }

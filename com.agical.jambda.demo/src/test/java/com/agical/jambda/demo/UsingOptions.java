@@ -14,7 +14,9 @@ public class UsingOptions {
     *Options* are used to make the decision on data existence. Functions are passed to an Option 
     to handle the cases *some data exist*, i.e. *some*, and *no data exists*, i.e. *none*.
     
-    The decision on what to to is made when the Option is created, i.e. where you have the knowledge  
+    The decision on what execution path to go is made when the Option is created, 
+    i.e. which is at the earliest possible moment. This is a way of building in 
+    the *null-pattern* in FP.    
     */
     @Test
     public void theSomeOption() throws Exception {
@@ -22,8 +24,8 @@ public class UsingOptions {
         In this case we create an option *with* data by calling the *Option factory method* =some=
         with the data to be provided, in this case a =User=. 
         */
-        Option<User> option = Option.some(new User("Daniel"));
-        Greeting greeting = option.map(typedPersonalGreeting(), typedAnonymousGreeting());
+        Option<User> user = Option.some(new User("Daniel"));
+        Greeting greeting = user.map(typedPersonalGreeting(), typedAnonymousGreeting());
         assertEquals("Hello, Daniel!", greeting.getGreeting());
         /*!
         The =map= method takes two functions:
@@ -37,7 +39,7 @@ public class UsingOptions {
     public void theNoneOption() throws Exception {
         /*!
         Here we create an option *without* data by calling the factory method =none=.
-        Since it represents no data available, no data is provided. 
+        Since it represents no data available, no data need to be provided. 
         */
         Option<User> option = Option.none();
         Greeting greeting = option.map(typedPersonalGreeting(), typedAnonymousGreeting());

@@ -16,10 +16,10 @@ public class DemoFunctions {
         };
     }
     
-    public static Fn1<String, String> personalGreeting() {
-        return new Fn1<String, String>() {
-            public String apply(String name) {
-                return "Hello, " + name + "!";
+    public static Fn1<Integer, String> personalGreeting() {
+        return new Fn1<Integer, String>() {
+            public String apply(Integer nr) {
+                return "Hello, nr " + nr + "!";
             }
         };
     }

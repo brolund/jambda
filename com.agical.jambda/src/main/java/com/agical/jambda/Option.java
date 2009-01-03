@@ -59,9 +59,10 @@ public abstract class Option<T> extends AbstractCollection<T> {
 
 	static final private class Some<T> extends Option<T> {
 		private static final int SIZE = 1;
-		private T content;
+		private final T content;
 
 		public Some(T content) {
+		    if(content==null) throw new NullPointerException("The some() method must have a non-null argument.");
 			this.content = content;
 		}
 
