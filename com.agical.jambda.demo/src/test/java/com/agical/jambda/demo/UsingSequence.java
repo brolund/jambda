@@ -1,8 +1,9 @@
 package com.agical.jambda.demo;
 
 import static com.agical.bumblebee.junit4.Storage.store;
-import static com.agical.jambda.demo.DemoFunctions.*;
-import static org.junit.Assert.*;
+import static com.agical.jambda.demo.DemoFunctions.acceptStringsStartingWithJ;
+import static com.agical.jambda.demo.DemoFunctions.aggregateStrings;
+import static com.agical.jambda.demo.DemoFunctions.userCreator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -12,9 +13,9 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.agical.jambda.Option;
 import com.agical.jambda.Sequence;
 import com.agical.jambda.Functions.Fn1;
-import com.agical.jambda.Functions.Fn2;
 
 public class UsingSequence {
     /*!
@@ -138,8 +139,24 @@ public class UsingSequence {
         next value in the sequence, hence your range can contain objects of any 
         type. The seed is the first value for the range and must be of the same 
         generic type as the incrementor. 
-        */
         
+        If you want a limited range, provide a limiter:
+        */
+        Fn1<Integer, Option<Integer>> limiter = new Fn1<Integer, Option<Integer>>() {
+            public Option<Integer> apply(Integer number) {
+                int limit = 2;
+                return number<limit?Option.some(number):Option.<Integer>none();
+            }
+        };
+        Iterator<Integer> limitedRange = Sequence.range(incrementor, limiter, 0);
+        
+        assertEquals(new Integer(0), limitedRange.next());
+        assertEquals(new Integer(1), limitedRange.next());
+        assertFalse(limitedRange.hasNext());
+        
+        /*!
+         
+        */
     }
     
 }

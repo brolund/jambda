@@ -103,15 +103,22 @@ public class Sequence<T> implements Iterable<T> {
 	}
 
     public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final T seed) {
+        return range(incrementor, new Fn1<T, Option<T>>() {
+            public Option<T> apply(T arg) {
+                return Option.some(arg);
+            }}, seed);
+    }
+    
+    public static <T> Iterator<T> range(final Fn1<T, T> incrementor, final Fn1<T, Option<T>> limiter, final T seed) {
         return new UnmodifiableIterator<T>() {
             T current = seed;
             public boolean hasNext() {
-                return true;
+                return limiter.apply(current).map(Functions.<T, Boolean>constantly(true), Functions.<Boolean>constantly(false));
             }
 
             public T next() {
                 T curr = current;
-                current = incrementor.apply(curr);
+                current = limiter.apply(current).map(incrementor, Functions.<T>constantly(current));
                 return curr;
             }
         };
@@ -122,4 +129,5 @@ public class Sequence<T> implements Iterable<T> {
             throw new UnsupportedOperationException("Options does not support remove.");
         }
     }
+
 }
