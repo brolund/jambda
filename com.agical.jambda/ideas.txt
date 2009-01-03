@@ -1,0 +1,4 @@
+
+*** Wild and crazy ideas. Or not.
+   - JambdaIterator with Option<T> instead of next()/hasNext()
+   - Y-combinator
