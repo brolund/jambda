@@ -2,6 +2,7 @@ syntax: glob
 .metadata
 *.class
 *.log
+.DS_Store
 
 syntax: regexp
 ^[^/]*/lib/*
