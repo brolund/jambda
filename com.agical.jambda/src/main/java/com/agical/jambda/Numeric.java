@@ -40,7 +40,7 @@ public class Numeric {
                 }
             };
                 
-        public static Fn2<Integer, Integer, Boolean> greaterThen =
+        public static Fn2<Integer, Integer, Boolean> greaterThan =
             new Fn2<Integer, Integer, Boolean>() {
                  public Boolean apply(Integer arg1, Integer arg2) {
                     return arg1 > arg2;
@@ -48,7 +48,7 @@ public class Numeric {
             };
 
         
-        public static Fn2<Integer, Integer, Boolean> smallerThen =
+        public static Fn2<Integer, Integer, Boolean> smallerThan =
             new Fn2<Integer, Integer, Boolean>() {
                  public Boolean apply(Integer arg1, Integer arg2) {
                     return arg1 < arg2;
@@ -90,7 +90,7 @@ public class Numeric {
 				}
 			};
 		
-        public static Fn2<Double, Double, Boolean> greaterThen =
+        public static Fn2<Double, Double, Boolean> greaterThan =
             new Fn2<Double, Double, Boolean>() {
                 public Boolean apply(Double arg1, Double arg2) {
                     return arg1 > arg2;
@@ -98,7 +98,7 @@ public class Numeric {
             };
 
         
-        public static Fn2<Double, Double, Boolean> smallerThen =
+        public static Fn2<Double, Double, Boolean> smallerThan =
             new Fn2<Double, Double, Boolean>() {
                 public Boolean apply(Double arg1, Double arg2) {
                     return arg1 < arg2;

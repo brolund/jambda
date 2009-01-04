@@ -33,7 +33,7 @@ public class Euler {
         */
         
         Integer sum = foldLeft( 
-                filter(takeWhile(range(plus.apply(1), 0), smallerThen.rightCurry(1000)), 
+                filter(takeWhile(range(plus.apply(1), 0), smallerThan.rightCurry(1000)), 
                         new Fn1<Integer, Boolean>() {
                             public Boolean apply(Integer x) {
                                 return x % 5 == 0 || x % 3 == 0;
@@ -77,7 +77,7 @@ public class Euler {
                 Tuple2.<Integer, Integer>firstGetter());
         
         Integer sum = 
-            sum(filter(takeWhile(fibs, greaterThen.apply(4000000)), 
+            sum(filter(takeWhile(fibs, greaterThan.apply(4000000)), 
                        modulo.rightCurry(2).compose(equals.apply(0))));
         
         assertEquals(new Integer(4613732), sum);
