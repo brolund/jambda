@@ -51,7 +51,7 @@ public abstract class Sequence<T> implements Iterable<T> {
 		}
 	}
 	
-	public class SequenceIterator extends UnmodifiableIterator<T> {
+	public class SequenceIterator extends ImmutableIterator<T> {
 	    private Sequence<T> sequence;
 	    
 	    public SequenceIterator(Sequence<T> cons) {
@@ -97,14 +97,15 @@ public abstract class Sequence<T> implements Iterable<T> {
 		return new Iterable<TTarget>() {
 		     public Iterator<TTarget> iterator() {
 		         final Iterator<TSource> sourceIterator = source.iterator();
-                return new UnmodifiableIterator<TTarget>() {
-                    public boolean hasNext() { return sourceIterator.hasNext(); }
-                    public TTarget next() { return selector.apply(sourceIterator.next()); }
-                };
-            }
+		         return new ImmutableIterator<TTarget>() {
+		             public boolean hasNext() { return sourceIterator.hasNext(); }
+		             public TTarget next() { return selector.apply(sourceIterator.next()); }
+		         };
+		     }
 		};
 	}
 	
+	// WARNING! Does not handle unlimited sequences (yet).
 	public static <TSource, TTarget> Iterable<TTarget> mapFlat(Iterable<TSource> source, final Fn1<TSource, Iterable<TTarget>> selector) {
 		return foldRight(
 				source,
@@ -127,19 +128,25 @@ public abstract class Sequence<T> implements Iterable<T> {
 	 * Creates a sequence, its elements are calculated from the function and the elements of input sequences occuring 
 	 * at the same position in both sequences.
 	 */
-	public static <TSource1, TSource2, TTarget> Iterable<TTarget> zipWith(Iterable<TSource1> s1, Iterable<TSource2> s2, 
+	public static <TSource1, TSource2, TTarget> Iterable<TTarget> zipWith(final Iterable<TSource1> s1, final Iterable<TSource2> s2, 
 			final Fn2<TSource1, TSource2, TTarget> selector) {
-		return zipWith(s1.iterator(), s2.iterator(), selector);
+	    return new Iterable<TTarget>() {
+            public Iterator<TTarget> iterator() {
+                final Iterator<TSource1> i1 = s1.iterator();
+                final Iterator<TSource2> i2 = s2.iterator();
+                return new ImmutableIterator<TTarget>() {
+                    public boolean hasNext() { return i1.hasNext() && i2.hasNext(); }
+                    public TTarget next() { return selector.apply(i1.next(), i2.next()); }
+                };
+            }
+       };
 	}
 	
-	private static <TSource1, TSource2, TTarget> Sequence<TTarget> zipWith(Iterator<TSource1> i1, Iterator<TSource2> i2, 
-			final Fn2<TSource1, TSource2, TTarget> selector) {
-		return (i1.hasNext() && i2.hasNext())
-			? new Cell<TTarget>(selector.apply(i1.next(), i2.next()), zipWith(i1, i2, selector))
-			: new Empty<TTarget>();
-	}
-	
-	// Filters a sequence of values based on a predicate.
+	/**
+	 * Filters a sequence of values based on a predicate.
+	 * 
+     * WARNING! Does not handle unlimited sequences (yet).
+	 */
 	public static <T> Iterable<T> filter(Iterable<T> source, final Fn1<T, Boolean> predicate) {
 		return foldRight(
 				source,
@@ -153,9 +160,11 @@ public abstract class Sequence<T> implements Iterable<T> {
 	
 	/**
 	 * Returns elements from a sequence as long as a specified condition is true.
+	 * 
+	 * WARNING! Does not handle unlimited sequences (yet).
 	 */
-	public static <T> Iterable<T> takeWhile(Iterable<T> source, final Fn1<T, Boolean> predicate) {
-        return takeWhile(source.iterator(), predicate);
+	public static <T> Iterable<T> takeWhile(final Iterable<T> source, final Fn1<T, Boolean> predicate) {
+	    return takeWhile(source.iterator(), predicate);
     }
 	
 	private static <T> Sequence<T> takeWhile(Iterator<T> i, final Fn1<T, Boolean> predicate) {
@@ -172,28 +181,20 @@ public abstract class Sequence<T> implements Iterable<T> {
 	
 	// Determines whether all elements of a sequence satisfy a condition.
 	public static <T> Boolean all(Iterable<T> source, final Fn1<T, Boolean> predicate) {
-		// Should exit the recursion when first element generates false...
-		return foldLeft(
-				source,
-				new Fn2<T, Boolean, Boolean>() {
-					public Boolean apply(T element, Boolean acc) {
-						return (predicate.apply(element)) && acc;
-					}
-				},
-				true);
+	    Iterator<T> iterator = source.iterator();
+        while(iterator.hasNext())
+            if(!predicate.apply(iterator.next()))
+                return false;
+        return true;
 	}
 	
 	// Determines whether any element of a sequence exists or satisfies a condition.
 	public static <T> Boolean any(final Iterable<T> source, final Fn1<T, Boolean> predicate) {
-		// Should exit the recursion when first element generates true...
-		return foldLeft(
-				source,
-				new Fn2<T, Boolean, Boolean>() {
-					public Boolean apply(T element, Boolean acc) {
-						return (predicate.apply(element)) || acc;
-					}
-				},
-				false);
+	    Iterator<T> iterator = source.iterator();
+	    while(iterator.hasNext())
+	        if(predicate.apply(iterator.next()))
+	            return true;
+        return false;
 	}
 	
 	// Returns the number of elements in a sequence.
@@ -272,7 +273,7 @@ public abstract class Sequence<T> implements Iterable<T> {
     public static <T> Iterable<T> range(final Fn1<T, T> incrementor, final Fn1<T, Boolean> limiter, final T seed) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
-                return new UnmodifiableIterator<T>() {
+                return new ImmutableIterator<T>() {
                     T current = seed;
                     public boolean hasNext() {
                         return limiter.apply(current);
@@ -288,9 +289,9 @@ public abstract class Sequence<T> implements Iterable<T> {
         };
     }
     
-    private static abstract class UnmodifiableIterator<E> implements Iterator<E> {
+    private static abstract class ImmutableIterator<E> implements Iterator<E> {
         public void remove() {
-            throw new UnsupportedOperationException("Options does not support remove.");
+            throw new UnsupportedOperationException("ImmutableIterator does not support remove.");
         }
     }
 

@@ -4,6 +4,5 @@
    - Y-combinator (unless we accept references to this from within an apply-method...)
    - Handle "Pure" funktions somehow. (annotations, constructor argument ...)
    - Add support for some basic parallelism.
-   - Convenience-funktions to create sequences.
    - Pre-cooked functions library
    - Rewrite everything in Sequence as lazy sequences (and remove Cell etc.)   
