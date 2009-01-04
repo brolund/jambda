@@ -34,64 +34,64 @@ public abstract class Sequence {
 		return Arrays.asList(elements);
 	}
 	
-	public static <TSource, TTarget> TTarget foldLeft(Iterable<TSource> source, Fn2<TSource, TTarget, TTarget> fn, TTarget accumulator) {
+	public static <TIn, TOut> TOut foldLeft(Iterable<TIn> source, Fn2<TIn, TOut, TOut> fn, TOut accumulator) {
 		return foldLeft(source.iterator(), fn, accumulator); 
 	}
 
-	public static <TSource, TTarget> TTarget foldLeft(Iterator<TSource> source, Fn2<TSource, TTarget, TTarget> fn, TTarget accumulator) {
+	private static <TIn, TOut> TOut foldLeft(Iterator<TIn> source, Fn2<TIn, TOut, TOut> fn, TOut accumulator) {
 	    // Recursion without "Tail Call Optimizing" is not a good idea.
         while(source.hasNext())
             accumulator = fn.apply(source.next(), accumulator);
         return accumulator;
     }
 
-	public static <TSource, TTarget> TTarget foldRight(Iterable<TSource> source, Fn2<TSource, TTarget, TTarget> fn, TTarget accumulator) {
+	public static <TIn, TOut> TOut foldRight(Iterable<TIn> source, Fn2<TIn, TOut, TOut> fn, TOut accumulator) {
         return foldRight(source.iterator(), fn, accumulator);
     }
 
-    public static <TTarget, TSource> TTarget foldRight(Iterator<TSource> iterator, Fn2<TSource, TTarget, TTarget> fn,TTarget accumulator) {
+    private static <TOut, TIn> TOut foldRight(Iterator<TIn> iterator, Fn2<TIn, TOut, TOut> fn,TOut accumulator) {
         return iterator.hasNext()
                     ? fn.apply(iterator.next(), foldRight(iterator, fn, accumulator))
                     : accumulator;
     }
 	
     // Projects each element of a sequence into a new form.
-	public static <TSource, TTarget> Iterable<TTarget> map(final Iterable<TSource> source, final Fn1<TSource, TTarget> selector) {
-		return new Iterable<TTarget>() {
-		     public Iterator<TTarget> iterator() {
-		         final Iterator<TSource> sourceIterator = source.iterator();
-		         return new ImmutableIterator<TTarget>() {
+	public static <TIn, TOut> Iterable<TOut> map(final Iterable<TIn> source, final Fn1<TIn, TOut> selector) {
+		return new Iterable<TOut>() {
+		     public Iterator<TOut> iterator() {
+		         final Iterator<TIn> sourceIterator = source.iterator();
+		         return new ImmutableIterator<TOut>() {
 		             public boolean hasNext() { return sourceIterator.hasNext(); }
-		             public TTarget next() { return selector.apply(sourceIterator.next()); }
+		             public TOut next() { return selector.apply(sourceIterator.next()); }
 		         };
 		     }
 		};
 	}
 	
-	public static <TSource, TTarget> Iterable<TTarget> mapFlat(final Iterable<TSource> source, final Fn1<TSource, Iterable<TTarget>> selector) {
-	    return new Iterable<TTarget>() {
-            public Iterator<TTarget> iterator() {
-                final Iterator<TSource> sourceIterator = source.iterator();
-                return new ImmutableIterator<TTarget>() {
-                    private Iterator<TTarget> currentIterator = new EmptyIterator<TTarget>();
-                    private Option<TTarget> current = this.getNext();
+	public static <TIn, TOut> Iterable<TOut> mapFlat(final Iterable<TIn> source, final Fn1<TIn, Iterable<TOut>> selector) {
+	    return new Iterable<TOut>() {
+            public Iterator<TOut> iterator() {
+                final Iterator<TIn> sourceIterator = source.iterator();
+                return new ImmutableIterator<TOut>() {
+                    private Iterator<TOut> currentIterator = new EmptyIterator<TOut>();
+                    private Option<TOut> current = this.getNext();
                     
                     public boolean hasNext() { return current.isSome(); }
                     
-                    public TTarget next() { 
-                        TTarget curr = this.current.escape(new Fn0<TTarget>() { 
-                            public TTarget apply() { throw new NoSuchElementException(); } 
+                    public TOut next() { 
+                        TOut curr = this.current.escape(new Fn0<TOut>() { 
+                            public TOut apply() { throw new NoSuchElementException(); } 
                         });
                         this.current = this.getNext();
                         return curr;
                     }
                     
                     // Need to be rewritten... but seems to work.
-                    private Option<TTarget> getNext() {
+                    private Option<TOut> getNext() {
                         if(!currentIterator.hasNext())
                             currentIterator = sourceIterator.hasNext()
                                 ? selector.apply(sourceIterator.next()).iterator()
-                                : new EmptyIterator<TTarget>();
+                                : new EmptyIterator<TOut>();
                         if(currentIterator.hasNext())
                             return some(currentIterator.next());
                         else 
@@ -106,15 +106,15 @@ public abstract class Sequence {
 	 * Creates a sequence, its elements are calculated from the function and the elements of input sequences occuring 
 	 * at the same position in both sequences.
 	 */
-	public static <TSource1, TSource2, TTarget> Iterable<TTarget> zipWith(final Iterable<TSource1> s1, final Iterable<TSource2> s2, 
-			final Fn2<TSource1, TSource2, TTarget> selector) {
-	    return new Iterable<TTarget>() {
-            public Iterator<TTarget> iterator() {
-                final Iterator<TSource1> i1 = s1.iterator();
-                final Iterator<TSource2> i2 = s2.iterator();
-                return new ImmutableIterator<TTarget>() {
+	public static <TIn1, TIn2, TOut> Iterable<TOut> zipWith(final Iterable<TIn1> s1, final Iterable<TIn2> s2, 
+			final Fn2<TIn1, TIn2, TOut> selector) {
+	    return new Iterable<TOut>() {
+            public Iterator<TOut> iterator() {
+                final Iterator<TIn1> i1 = s1.iterator();
+                final Iterator<TIn2> i2 = s2.iterator();
+                return new ImmutableIterator<TOut>() {
                     public boolean hasNext() { return i1.hasNext() && i2.hasNext(); }
-                    public TTarget next() { return selector.apply(i1.next(), i2.next()); }
+                    public TOut next() { return selector.apply(i1.next(), i2.next()); }
                 };
             }
        };
@@ -230,7 +230,7 @@ public abstract class Sequence {
 				source,
 				new Fn2<T, Integer, Integer>() {
 					public Integer apply(T element, Integer acc) {
-						return acc + (predicate.apply(element) ? 1 : 0);
+						return predicate.apply(element) ? acc + 1 : acc;
 					}
 				},
 				0);
