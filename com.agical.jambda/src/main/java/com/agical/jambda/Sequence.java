@@ -68,6 +68,14 @@ public abstract class Sequence {
 		};
 	}
 	
+	/**
+	 * This method 
+	 * @param <TIn>
+	 * @param <TOut>
+	 * @param source
+	 * @param selector
+	 * @return
+	 */
 	public static <TIn, TOut> Iterable<TOut> mapFlat(final Iterable<TIn> source, final Fn1<TIn, Iterable<TOut>> selector) {
 	    return new Iterable<TOut>() {
             public Iterator<TOut> iterator() {
@@ -103,7 +111,7 @@ public abstract class Sequence {
 	}
 	
 	/**
-	 * Creates a sequence, its elements are calculated from the function and the elements of input sequences occuring 
+	 * Creates a sequence, its elements are calculated from the function and the elements of input sequences occurring 
 	 * at the same position in both sequences.
 	 */
 	public static <TIn1, TIn2, TOut> Iterable<TOut> zipWith(final Iterable<TIn1> s1, final Iterable<TIn2> s2, 

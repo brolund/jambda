@@ -7,13 +7,10 @@ import static com.agical.jambda.demo.DemoFunctions.userCreator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.junit.Test;
 
-import com.agical.jambda.Option;
 import com.agical.jambda.Sequence;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Numeric.Integers;
@@ -50,28 +47,34 @@ public class UsingSequence {
     @Test
     public void mappingACollectionToMultpleResultsPerElement() throws Exception {
         /*!
-        To be written ...
-        */
-        Iterable<Integer> ordinals = Sequence.createSequence(1, 2);
+        The first argument of the =mapFlat= method takes a *key sequence* 
+        and will use the elements of that sequence as in-data to the second argument,
+        a function that creates new sequences for every key. =mapFlat= will aggregate 
+        all those new sequences into one consecutive sequence.
         
-        Iterable<User> users = 
-        	Sequence.mapFlat(
-        			ordinals, 
-        			new Fn1<Integer, Iterable<User>>() {
-        				public Iterable<User> apply(Integer i) {
-        					return Sequence.map(Sequence.createSequence("Daniel" + i, "Johan" + i, "Joakim" + i), userCreator());
-        				}
-        			});
-        Iterator<User> iterator = users.iterator();
-        assertEquals("Daniel1", iterator.next().getName());
-        assertEquals("Johan1", iterator.next().getName());
-        assertEquals("Joakim1", iterator.next().getName());
-        assertEquals("Daniel2", iterator.next().getName());
-        assertEquals("Johan2", iterator.next().getName());
-        assertEquals("Joakim2", iterator.next().getName());
-        /*!
-        To be written
+        In this case the key sequence is the numbers 1 and 2, and the function just 
+        creates a new sequence of names with the numbers attached at the end.
         */
+        Iterable<Integer> keySequence = Sequence.createSequence(1, 2);
+        
+        Iterable<String> users = 
+            Sequence.mapFlat(
+                    keySequence, 
+                    new Fn1<Integer, Iterable<String>>() {
+                        public Iterable<String> apply(Integer key) {
+                            return Sequence.createSequence("Daniel" + key, 
+                                                            "Johan" + key, 
+                                                            "Joakim" + key);
+                        }
+                    });
+        Iterator<String> iterator = users.iterator();
+        assertEquals("Daniel1", iterator.next());
+        assertEquals("Johan1", iterator.next());
+        assertEquals("Joakim1", iterator.next());
+        assertEquals("Daniel2", iterator.next());
+        assertEquals("Johan2", iterator.next());
+        assertEquals("Joakim2", iterator.next());
+        /*!*/
     }
     
     @Test
@@ -83,8 +86,8 @@ public class UsingSequence {
         
         Let us start with a sequence containing some names:
         */
-    	Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
-    	
+        Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
+        
         /*!
         Now we will use an aggregating function to create a string:
         >>>>
