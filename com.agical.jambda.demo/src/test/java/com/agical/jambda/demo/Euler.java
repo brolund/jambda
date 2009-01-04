@@ -7,6 +7,8 @@ import com.agical.jambda.Functions.*;
 import com.agical.jambda.Tuples.*;
 
 import static com.agical.jambda.Sequence.*;
+import static com.agical.jambda.Tuples.*;
+import static com.agical.jambda.Tuples.Tuple2.*;
 import static com.agical.jambda.Numeric.Integers.*;
 import static org.junit.Assert.assertEquals;
 
@@ -73,7 +75,7 @@ public class Euler {
                         return Tuples.duo(in.getSecond(), in.getFirst() + in.getSecond());
                     }
                 },
-                Tuples.duo(0, 1)),
+                duo(0, 1)),
                 Tuple2.<Integer, Integer>firstGetter());
         
         Integer sum = 
