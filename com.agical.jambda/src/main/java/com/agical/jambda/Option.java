@@ -17,6 +17,13 @@ public abstract class Option<T> extends AbstractCollection<T> {
 	public static <T> Option<T> none() {
 		return new None<T>();
 	}
+	
+	public static <T> Option<T> conditional(Fn0<Boolean> condition, Fn0<T> contentFn) {
+	    if(condition.apply())
+	        return some(contentFn.apply());
+	    else
+	        return none();
+	}
 
     public <TOut> Option<TOut> bind(Fn1<T, Option<TOut>> binder) {
         return this.map(

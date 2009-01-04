@@ -5,4 +5,5 @@
    - Handle "Pure" funktions somehow. (annotations, constructor argument ...)
    - Add support for some basic parallelism.
    - Pre-cooked functions library
-   - Rewrite everything in Sequence as lazy sequences (and remove Cell etc.)   
+   - Discuss Iterator and Iterable vs. JambdaIterator.
+   - Discuss short vs. long and descriptive names.  

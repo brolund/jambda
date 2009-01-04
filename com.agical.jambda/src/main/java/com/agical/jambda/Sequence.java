@@ -22,7 +22,7 @@ public abstract class Sequence {
     private static class EmptyIterator<T> extends ImmutableIterator<T> {
         public boolean hasNext() { return false; }
         public T next() { throw new NoSuchElementException(); }
-    };
+    }
     
     public static <T> Iterable<T> Empty() {
         return new Iterable<T>() {
@@ -276,25 +276,23 @@ public abstract class Sequence {
 	 * @return The iterator.
 	 */
     public static <T> Iterable<T> range(final Fn1<T, T> incrementor, final T seed) {
-        return range(incrementor, Functions.<T, Boolean>constantly(true), seed);
-    }
-    
-    public static <T> Iterable<T> range(final Fn1<T, T> incrementor, final Fn1<T, Boolean> limiter, final T seed) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
                 return new ImmutableIterator<T>() {
                     T current = seed;
-                    public boolean hasNext() {
-                        return limiter.apply(current);
-                    }
+                    public boolean hasNext() { return true; }
 
                     public T next() {
                         T curr = current;
-                        current = limiter.apply(current)?incrementor.apply(current):current;
+                        current = incrementor.apply(current);
                         return curr;
                     }
                 };
             }
         };
+    }
+    
+    public static <T> Iterable<T> range(final Fn1<T, T> incrementor, final Fn1<T, Boolean> limiter, final T seed) {
+        return takeWhile(range(incrementor, seed), limiter);
     }
  }
