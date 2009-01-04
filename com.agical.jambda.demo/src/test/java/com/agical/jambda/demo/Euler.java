@@ -1,16 +1,23 @@
 package com.agical.jambda.demo;
 
+import static com.agical.jambda.Numeric.Integers.equals;
+import static com.agical.jambda.Numeric.Integers.greaterThan;
+import static com.agical.jambda.Numeric.Integers.modulo;
+import static com.agical.jambda.Numeric.Integers.plus;
+import static com.agical.jambda.Numeric.Integers.smallerThan;
+import static com.agical.jambda.Numeric.Integers.sum;
+import static com.agical.jambda.Sequence.filter;
+import static com.agical.jambda.Sequence.foldLeft;
+import static com.agical.jambda.Sequence.map;
+import static com.agical.jambda.Sequence.range;
+import static com.agical.jambda.Sequence.takeWhile;
+import static com.agical.jambda.Tuples.duo;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import com.agical.jambda.Tuples;
-import com.agical.jambda.Functions.*;
-import com.agical.jambda.Tuples.*;
-
-import static com.agical.jambda.Sequence.*;
-import static com.agical.jambda.Tuples.*;
-import static com.agical.jambda.Tuples.Tuple2.*;
-import static com.agical.jambda.Numeric.Integers.*;
-import static org.junit.Assert.assertEquals;
+import com.agical.jambda.Functions.Fn1;
+import com.agical.jambda.Tuples.Tuple2;
 
 public class Euler {
     /*!!
@@ -72,7 +79,7 @@ public class Euler {
         Iterable<Integer> fibs = map(range(
                 new Fn1<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>>() {
                     public Tuple2<Integer, Integer> apply(Tuple2<Integer, Integer> in) {
-                        return Tuples.duo(in.getSecond(), in.getFirst() + in.getSecond());
+                        return duo(in.getSecond(), in.getFirst() + in.getSecond());
                     }
                 },
                 duo(0, 1)),
