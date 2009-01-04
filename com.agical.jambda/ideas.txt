@@ -7,3 +7,6 @@
    - Pre-cooked functions library
    - Discuss Iterator and Iterable vs. JambdaIterator.
    - Discuss short vs. long and descriptive names.  
+   - Make sure that all sequence operations are really lazy (some of them starts to read from its source on creation).
+   - Implement concatenate and flatten.
+   - Implement mapi
