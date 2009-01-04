@@ -16,6 +16,34 @@ public class Euler {
     */
     
     @Test
+    public void eulerProblem1() throws Exception {
+        /*!
+        The problem:
+        If we list all the natural numbers below 10 that are multiples 
+        of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
+
+        Find the sum of all the multiples of 3 or 5 below 1000.
+        
+        A sollution in F#:
+        List.fold_left (+) 0 (List.filter (fun n -> (n%3 = 0) || (n%5 = 0)) [0 .. 999])        
+        
+        In jambda it could be solved like this:
+        */
+        
+        Integer sum = foldLeft( 
+                filter(takeWhile(range(plus.apply(1), 0), smallerThen.rightCurry(1000)), 
+                        new Fn1<Integer, Boolean>() {
+                            public Boolean apply(Integer x) {
+                                return x % 5 == 0 || x % 3 == 0;
+                            }
+                        }),
+                plus,
+                0);
+        
+        assertEquals(new Integer(233168), sum);
+    }
+    
+    @Test
     public void eulerProblem2() throws Exception {
         /*!
         The problem:
