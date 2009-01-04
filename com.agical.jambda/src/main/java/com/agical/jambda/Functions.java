@@ -14,6 +14,15 @@ public class Functions {
         public Fn1<T, R> apply() {
 			return this;
 		}
+        
+        public Fn0<R> curry(final T arg) {
+            final Fn1<T, R> origFn = this;
+            return new Fn0<R>() {
+                public R apply() {
+                    return origFn.apply(arg);
+                }
+            };
+        }
 
 		public <R2> Fn1<T, R2> compose(final Fn1<R, R2> g) {
         	final Fn1<T, R> f = this;
