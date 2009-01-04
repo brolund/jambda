@@ -24,8 +24,10 @@ public class Euler {
 
         Find the sum of all the multiples of 3 or 5 below 1000.
         
-        A sollution in F#:
+        A solution in F#:
+        >>>>
         List.fold_left (+) 0 (List.filter (fun n -> (n%3 = 0) || (n%5 = 0)) [0 .. 999])        
+        <<<<
         
         In jambda it could be solved like this:
         */
@@ -41,6 +43,7 @@ public class Euler {
                 0);
         
         assertEquals(new Integer(233168), sum);
+        /*!*/
     }
     
     @Test
@@ -55,12 +58,13 @@ public class Euler {
         Find the sum of all the even-valued terms in the sequence which do not exceed four million.
         
         A sollution in Haskell:
+        >>>>
         module P2 where
             problem2:: Int -> Int
             problem2 y =    sum [ x | x <- takeWhile (<= y) fibonacci, mod x 2 ==0]
                 where
                 fibonacci = 0 : 1 : zipWith (+) fibonacci (tail fibonacci)
-        
+        <<<<
         In jambda it could be solved like this:
         */
         Iterable<Integer> fibs = map(range(
@@ -77,6 +81,7 @@ public class Euler {
                        modulo.rightCurry(2).compose(equals.apply(0))));
         
         assertEquals(new Integer(4613732), sum);
+        /*!*/
     }
 }
 
