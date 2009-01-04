@@ -3,6 +3,7 @@ package com.agical.jambda;
 import static com.agical.jambda.Option.none;
 import static com.agical.jambda.Option.some;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -10,65 +11,27 @@ import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 
-public abstract class Sequence<T> implements Iterable<T> {
-	public abstract Option<T> head();
-	public abstract Sequence<T> tail();
+public abstract class Sequence {
+    
+    private static abstract class ImmutableIterator<E> implements Iterator<E> {
+        public void remove() {
+            throw new UnsupportedOperationException("ImmutableIterator does not support remove.");
+        }
+    }
+    
+    private static class EmptyIterator<T> extends ImmutableIterator<T> {
+        public boolean hasNext() { return false; }
+        public T next() { throw new NoSuchElementException(); }
+    };
+    
+    public static <T> Iterable<T> Empty() {
+        return new Iterable<T>() {
+            public Iterator<T> iterator() { return new EmptyIterator<T>(); }
+        };
+    }
 
-	public Iterator<T> iterator() {
-		return new SequenceIterator(this);
-	}
-	
-	public static <T> Iterable<T> createSequence(T ... elements) {
-		return createSequence(elements, 0);
-	}
-	
-	private static <T> Sequence<T> createSequence(T[] elements, int i){
-		return (i < elements.length)
-			? new Cell<T>(elements[i], createSequence(elements, i + 1))
-			: new Empty<T>();
-	}
-	
-	private static class Empty<TC> extends Sequence<TC> {
-		public Option<TC> head() { return none(); }
-		public Sequence<TC> tail() { return this; };
-	}
-	
-	private static class Cell<TC> extends Sequence<TC> {
-		public final Option<TC> head;
-		public final Sequence<TC> tail;
-		
-		public Option<TC> head() { return this.head; }
-		public Sequence<TC> tail() { return this.tail; };
-
-		public Cell(TC head) {
-			this.head = some(head);
-			this.tail = new Empty<TC>();
-		}
-		
-		public Cell(TC head, Sequence<TC> tail) {
-			this.head = some(head);
-			this.tail = tail;
-		}
-	}
-	
-	public class SequenceIterator extends ImmutableIterator<T> {
-	    private Sequence<T> sequence;
-	    
-	    public SequenceIterator(Sequence<T> cons) {
-	        this.sequence = cons;
-	    }
-
-	    public boolean hasNext() {
-	    	return this.sequence.head().isSome();
-	    }
-
-	    public T next() {
-	    	// El�nde...
-	    	T element = this.sequence.head().escape(
-	    			new Fn0<T>() { public T apply() { throw new NoSuchElementException(); } });
-	    	this.sequence = this.sequence.tail();
-	    	return element;
-	    }
+    public static <T> Iterable<T> createSequence(T ... elements) {
+		return Arrays.asList(elements);
 	}
 	
 	public static <TSource, TTarget> TTarget foldLeft(Iterable<TSource> source, Fn2<TSource, TTarget, TTarget> fn, TTarget accumulator) {
@@ -105,23 +68,38 @@ public abstract class Sequence<T> implements Iterable<T> {
 		};
 	}
 	
-	// WARNING! Does not handle unlimited sequences (yet).
-	public static <TSource, TTarget> Iterable<TTarget> mapFlat(Iterable<TSource> source, final Fn1<TSource, Iterable<TTarget>> selector) {
-		return foldRight(
-				source,
-				new Fn2<TSource, Sequence<TTarget>, Sequence<TTarget>>() {
-					public Sequence<TTarget> apply(TSource element, Sequence<TTarget> acc) {
-						return foldRight(
-								selector.apply(element),
-								new Fn2<TTarget, Sequence<TTarget>, Sequence<TTarget>>() {
-									public Sequence<TTarget> apply(TTarget element, Sequence<TTarget> acc2) {
-										return new Cell<TTarget>(element, acc2);
-									}
-								},
-								acc);
-					}
-				},
-				new Empty<TTarget>());
+	public static <TSource, TTarget> Iterable<TTarget> mapFlat(final Iterable<TSource> source, final Fn1<TSource, Iterable<TTarget>> selector) {
+	    return new Iterable<TTarget>() {
+            public Iterator<TTarget> iterator() {
+                final Iterator<TSource> sourceIterator = source.iterator();
+                return new ImmutableIterator<TTarget>() {
+                    private Iterator<TTarget> currentIterator = new EmptyIterator<TTarget>();
+                    private Option<TTarget> current = this.getNext();
+                    
+                    public boolean hasNext() { return current.isSome(); }
+                    
+                    public TTarget next() { 
+                        TTarget curr = this.current.escape(new Fn0<TTarget>() { 
+                            public TTarget apply() { throw new NoSuchElementException(); } 
+                        });
+                        this.current = this.getNext();
+                        return curr;
+                    }
+                    
+                    // Need to be rewritten... but seems to work.
+                    private Option<TTarget> getNext() {
+                        if(!currentIterator.hasNext())
+                            currentIterator = sourceIterator.hasNext()
+                                ? selector.apply(sourceIterator.next()).iterator()
+                                : new EmptyIterator<TTarget>();
+                        if(currentIterator.hasNext())
+                            return some(currentIterator.next());
+                        else 
+                            return none(); 
+                    }
+                };
+            }
+       };
 	}
 	
 	/**
@@ -144,40 +122,71 @@ public abstract class Sequence<T> implements Iterable<T> {
 	
 	/**
 	 * Filters a sequence of values based on a predicate.
-	 * 
-     * WARNING! Does not handle unlimited sequences (yet).
 	 */
-	public static <T> Iterable<T> filter(Iterable<T> source, final Fn1<T, Boolean> predicate) {
-		return foldRight(
-				source,
-				new Fn2<T, Sequence<T>, Sequence<T>>() {
-					public Sequence<T> apply(T element, Sequence<T> acc) {
-						return (predicate.apply(element)) ? new Cell<T>(element, acc) : acc;
-					}
-				},
-				new Empty<T>());
+	public static <T> Iterable<T> filter(final Iterable<T> source, final Fn1<T, Boolean> predicate) {
+	    return new Iterable<T>() {
+            public Iterator<T> iterator() {
+                final Iterator<T> sourceIterator = source.iterator();
+                return new ImmutableIterator<T>() {
+                    private Option<T> current = this.getNext();
+                    
+                    public boolean hasNext() { return this.current.isSome(); }
+                    
+                    public T next() { 
+                        T curr = this.current.escape(new Fn0<T>() { 
+                            public T apply() { throw new NoSuchElementException(); } 
+                        });
+                        this.current = this.getNext();
+                        return curr;
+                    }
+                    
+                    private Option<T> getNext() {
+                        while (sourceIterator.hasNext()) {
+                            T element = sourceIterator.next();
+                            if(predicate.apply(element))
+                                return some(element);
+                        }
+                        return none();    
+                    }
+                };
+            }
+       };
 	}
 	
 	/**
 	 * Returns elements from a sequence as long as a specified condition is true.
-	 * 
-	 * WARNING! Does not handle unlimited sequences (yet).
 	 */
 	public static <T> Iterable<T> takeWhile(final Iterable<T> source, final Fn1<T, Boolean> predicate) {
-	    return takeWhile(source.iterator(), predicate);
+	    return new Iterable<T>() {
+            public Iterator<T> iterator() {
+                final Iterator<T> sourceIterator = source.iterator();
+                return new ImmutableIterator<T>() {
+                    private Option<T> current = this.nextApplicable();
+                    
+                    public boolean hasNext() { return this.current.isSome(); }
+                    
+                    public T next() { 
+                        T curr = this.current.escape(new Fn0<T>() { 
+                            public T apply() { throw new NoSuchElementException(); } 
+                        });
+                        this.current = this.nextApplicable();
+                        return curr;
+                    }
+                    
+                    private Option<T> nextApplicable() {
+                        if (sourceIterator.hasNext()) {
+                            T element = sourceIterator.next();
+                            if(predicate.apply(element))
+                                return some(element);
+                            else
+                                return none();    
+                        }
+                        return none();    
+                    }
+                };
+            }
+       };
     }
-	
-	private static <T> Sequence<T> takeWhile(Iterator<T> i, final Fn1<T, Boolean> predicate) {
-	    if(i.hasNext()) {
-	        T element = i.next();
-	        
-	        return predicate.apply(element)
-	            ? new Cell<T>(element, takeWhile(i, predicate))
-	            : new Empty<T>();
-	    }
-	    else
-	        return new Empty<T>();
-	}
 	
 	// Determines whether all elements of a sequence satisfy a condition.
 	public static <T> Boolean all(Iterable<T> source, final Fn1<T, Boolean> predicate) {
@@ -288,11 +297,4 @@ public abstract class Sequence<T> implements Iterable<T> {
             }
         };
     }
-    
-    private static abstract class ImmutableIterator<E> implements Iterator<E> {
-        public void remove() {
-            throw new UnsupportedOperationException("ImmutableIterator does not support remove.");
-        }
-    }
-
-}
+ }
