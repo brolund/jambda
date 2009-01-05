@@ -7,16 +7,13 @@ import static com.agical.jambda.demo.DemoFunctions.userCreator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.junit.Test;
 
-import com.agical.jambda.Option;
 import com.agical.jambda.Sequence;
 import com.agical.jambda.Functions.Fn1;
-import com.agical.jambda.Numeric.Integers;
+import static com.agical.jambda.Numeric.*;
 
 public class UsingSequence {
     /*!
@@ -182,9 +179,9 @@ public class UsingSequence {
     
     @Test
     public void limitACollection() throws Exception {
-        Iterable<Integer> naturalNumbers = Sequence.range(Integers.plus.apply(1), 0);
+        Iterable<Integer> naturalNumbers = Sequence.range(plus(integerType).apply(1), 0);
         
-        Iterable<Integer> numbersUpTo5 = Sequence.takeWhile(naturalNumbers, Integers.smallerThan.rightCurry(6));
+        Iterable<Integer> numbersUpTo5 = Sequence.takeWhile(naturalNumbers, smallerThan(integerType).rightCurry(6));
         Iterator<Integer> iterator = numbersUpTo5.iterator();
         assertEquals(new Integer(0), iterator.next());
         assertEquals(new Integer(1), iterator.next());

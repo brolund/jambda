@@ -1,23 +1,12 @@
 package com.agical.jambda.demo;
 
-import static com.agical.jambda.Numeric.Integers.equals;
-import static com.agical.jambda.Numeric.Integers.greaterThan;
-import static com.agical.jambda.Numeric.Integers.modulo;
-import static com.agical.jambda.Numeric.Integers.plus;
-import static com.agical.jambda.Numeric.Integers.smallerThan;
-import static com.agical.jambda.Numeric.Integers.sum;
-import static com.agical.jambda.Sequence.filter;
-import static com.agical.jambda.Sequence.foldLeft;
-import static com.agical.jambda.Sequence.map;
-import static com.agical.jambda.Sequence.range;
-import static com.agical.jambda.Sequence.takeWhile;
-import static com.agical.jambda.Tuples.duo;
+import static com.agical.jambda.Numeric.*;
+import static com.agical.jambda.Sequence.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import com.agical.jambda.Functions.Fn1;
-import com.agical.jambda.Tuples.Tuple2;
 
 public class Euler {
     /*!!
@@ -42,13 +31,13 @@ public class Euler {
         */
         
         Integer sum = foldLeft( 
-                filter(takeWhile(range(plus.apply(1), 0), smallerThan.rightCurry(1000)), 
+                filter(takeWhile(range(plus(integerType).apply(1), 0), smallerThan(integerType).rightCurry(1000)), 
                         new Fn1<Integer, Boolean>() {
                             public Boolean apply(Integer x) {
                                 return x % 5 == 0 || x % 3 == 0;
                             }
                         }),
-                plus,
+                plus(integerType),
                 0);
         
         assertEquals(new Integer(233168), sum);
@@ -76,18 +65,11 @@ public class Euler {
         <<<<
         In jambda it could be solved like this:
         */
-        Iterable<Integer> fibs = map(range(
-                new Fn1<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>>() {
-                    public Tuple2<Integer, Integer> apply(Tuple2<Integer, Integer> in) {
-                        return duo(in.getSecond(), in.getFirst() + in.getSecond());
-                    }
-                },
-                duo(0, 1)),
-                Tuple2.<Integer, Integer>firstGetter());
+        Iterable<Integer> fibs = range(plus(integerType), 0, 1);
         
         Integer sum = 
-            sum(filter(takeWhile(fibs, greaterThan.apply(4000000)), 
-                       modulo.rightCurry(2).compose(equals.apply(0))));
+            sum(integerType, filter(takeWhile(fibs, greaterThan(integerType).apply(4000000)), 
+                       modulo(integerType).rightCurry(2).compose(equalTo(integerType).apply(0))));
         
         assertEquals(new Integer(4613732), sum);
         /*!*/

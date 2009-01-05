@@ -3,7 +3,6 @@ package com.agical.jambda.demo;
 import static com.agical.jambda.demo.DemoFunctions.typedAnonymousGreeting;
 import static com.agical.jambda.demo.DemoFunctions.typedPersonalGreeting;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

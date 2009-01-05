@@ -24,7 +24,7 @@ public abstract class Sequence {
         public T next() { throw new NoSuchElementException(); }
     }
     
-    public static <T> Iterable<T> Empty() {
+    public static <T> Iterable<T> empty() {
         return new Iterable<T>() {
             public Iterator<T> iterator() { return new EmptyIterator<T>(); }
         };
@@ -292,7 +292,26 @@ public abstract class Sequence {
         };
     }
     
+    public static <T> Iterable<T> range(final Fn2<T, T, T> incrementor, final T seed1, final T seed2) {
+        return new Iterable<T>() {
+            public Iterator<T> iterator() {
+                return new ImmutableIterator<T>() {
+                    T current1 = seed1;
+                    T current2 = seed2;
+                    public boolean hasNext() { return true; }
+
+                    public T next() {
+                        T curr = current1;
+                        current1 = current2;
+                        current2 = incrementor.apply(curr, current1);
+                        return curr;
+                    }
+                };
+            }
+        };
+    }
+    
     public static <T> Iterable<T> range(final Fn1<T, T> incrementor, final Fn1<T, Boolean> limiter, final T seed) {
         return takeWhile(range(incrementor, seed), limiter);
-    }
+    }  
  }

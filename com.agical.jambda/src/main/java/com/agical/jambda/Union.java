@@ -3,8 +3,7 @@ package com.agical.jambda;
 import com.agical.jambda.Functions.Fn1;
 
 public abstract class Union<TLeft, TRight> {
-	public abstract <TOut> TOut map(Fn1<TLeft, TOut> leftFn,
-			Fn1<TRight, TOut> rightFn);
+	public abstract <TOut> TOut map(Fn1<TLeft, TOut> leftFn, Fn1<TRight, TOut> rightFn);
 
 	public static <TLeft, TRight> Union<TLeft, TRight> left(TLeft content) {
 		return new Left<TLeft, TRight>(content);
@@ -21,34 +20,28 @@ public abstract class Union<TLeft, TRight> {
 			this.content = content;
 		}
 
-		@Override
 		public <TOut> TOut map(Fn1<TLeft, TOut> leftFn,
 				Fn1<TRight, TOut> rightFn) {
 			return leftFn.apply(this.content);
 		}
 
-		@Override
-		public java.lang.String toString() {
+		public String toString() {
 			return content.toString();
 		}
 	}
 
-	static final private class Right<TLeft, TRight> extends
-			Union<TLeft, TRight> {
+	static final private class Right<TLeft, TRight> extends Union<TLeft, TRight> {
 		TRight content;
 
 		public Right(TRight content) {
 			this.content = content;
 		}
 
-		@Override
-		public <TOut> TOut map(Fn1<TLeft, TOut> leftFn,
-				Fn1<TRight, TOut> rightFn) {
+		public <TOut> TOut map(Fn1<TLeft, TOut> leftFn, Fn1<TRight, TOut> rightFn) {
 			return rightFn.apply(this.content);
 		}
 
-		@Override
-		public java.lang.String toString() {
+		public String toString() {
 			return content.toString();
 		}
 	}
