@@ -33,7 +33,29 @@ public abstract class Sequence {
     public static <T> Iterable<T> createSequence(T ... elements) {
 		return Arrays.asList(elements);
 	}
-	
+
+    public static <T> Iterable<T> concat(final Iterable<T> sequence, final T ... appendix) {
+        return new Iterable<T>() {
+            public Iterator<T> iterator() {
+                return new ImmutableIterator<T>() {
+                    Iterator<T> firstSequence = sequence.iterator();
+                    Iterator<T> lastSequence = createSequence(appendix).iterator();
+                    public boolean hasNext() {
+                        return firstSequence.hasNext()||lastSequence.hasNext();
+                    }
+
+                    public T next() {
+                        return firstSequence.hasNext() 
+                            ? firstSequence.next()
+                            : lastSequence.next();
+                    }
+                };
+            }
+            
+        };
+    }
+    
+    
 	public static <TIn, TOut> TOut foldLeft(Iterable<TIn> source, Fn2<TIn, TOut, TOut> fn, TOut accumulator) {
 		return foldLeft(source.iterator(), fn, accumulator); 
 	}
@@ -68,6 +90,14 @@ public abstract class Sequence {
 		};
 	}
 	
+	/**
+	 * This method 
+	 * @param <TIn>
+	 * @param <TOut>
+	 * @param source
+	 * @param selector
+	 * @return
+	 */
 	public static <TIn, TOut> Iterable<TOut> mapFlat(final Iterable<TIn> source, final Fn1<TIn, Iterable<TOut>> selector) {
 	    return new Iterable<TOut>() {
             public Iterator<TOut> iterator() {
@@ -103,7 +133,7 @@ public abstract class Sequence {
 	}
 	
 	/**
-	 * Creates a sequence, its elements are calculated from the function and the elements of input sequences occuring 
+	 * Creates a sequence, its elements are calculated from the function and the elements of input sequences occurring 
 	 * at the same position in both sequences.
 	 */
 	public static <TIn1, TIn2, TOut> Iterable<TOut> zipWith(final Iterable<TIn1> s1, final Iterable<TIn2> s2, 
