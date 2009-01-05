@@ -1,10 +1,15 @@
 package com.agical.jambda.demo;
 
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
 
 import org.junit.Test;
 
+import com.agical.jambda.Sequence;
+import com.agical.jambda.Strings;
+import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 import com.agical.jambda.Tree.AbstractNode;
 import com.agical.jambda.Tree.Node;
@@ -19,6 +24,9 @@ public class MakingAGenericTree {
         visitor must be decided when creating the nodes, and you need to provide the
         node constructor a function that is called on visits. 
         
+        Optionally, as below, you can also provide functions to be called before and after 
+        traversal of children if you need tree structure information.
+        
         Lets create the functions:
         */
         Fn2<Integer, Visitor, Visitor> onVisitInteger = new Fn2<Integer, Visitor, Visitor>() {
@@ -31,17 +39,30 @@ public class MakingAGenericTree {
                 return visitor.visitString(string);
             }
         };
+        Fn1<Visitor, Visitor> before = new Fn1<Visitor, Visitor>() {
+            public Visitor apply(Visitor visitor) {
+                return visitor.beforeChildren();
+            }
+        };
+        Fn1<Visitor, Visitor> after = new Fn1<Visitor, Visitor>() {
+            public Visitor apply(Visitor visitor) {
+                return visitor.afterChildren();
+            }
+        };
+        
         /*!
+        These functions should be kept in conjunction with the specific visitor.
+         
         Now lets create the nodes: 
         */
-        AbstractNode<Visitor> node1 = new Node<Integer,Visitor>(1, onVisitInteger);
-        AbstractNode<Visitor> node2 = new Node<Integer,Visitor>(2, onVisitInteger);
-        AbstractNode<Visitor> nodeDaniel = new Node<String,Visitor>("Daniel", onVisitString);
-        AbstractNode<Visitor> nodeJohan = new Node<String,Visitor>("Johan", onVisitString);
+        Node<Integer,Visitor> node1 = new Node<Integer,Visitor>(1, onVisitInteger, before, after);
+        Node<Integer,Visitor> node2 = new Node<Integer,Visitor>(2, onVisitInteger, before, after);
+        Node<String,Visitor> nodeDaniel = new Node<String,Visitor>("Daniel", onVisitString, before, after);
+        Node<String,Visitor> nodeJohan = new Node<String,Visitor>("Johan", onVisitString, before, after);
         /*!
         ...and now we build the tree: 
         */
-        Iterable<AbstractNode<Visitor>> add = node1.add(nodeDaniel);
+        node1.add(nodeDaniel);
         node1.add(node2);
         nodeDaniel.add(nodeJohan);
         /*!
@@ -49,22 +70,40 @@ public class MakingAGenericTree {
         */
         final StringBuffer result = new StringBuffer();
         node1.traverse(new Visitor(){
+            int level = 1;
             public Visitor visitInteger(Integer i) {
-                result.append(i).append(" ");
+                append(i);
                 return this;
             }
+            // This is not kosher...
+            private void append(Object object) {
+                result.append("Level " + level + ": " + object);
+            }
             public Visitor visitString(String s) {
-                result.append(s).append(" ");
+                append(s);
+                return this;
+            }
+            public Visitor beforeChildren() {
+                level++;
+                return this;
+            }
+            public Visitor afterChildren() {
+                level--;
                 return this;
             }
         });
-        assertEquals("1 Daniel Johan 2 ", result.toString());
+        assertEquals(
+                "Level 1: 1" +
+                "Level 2: Daniel" +
+                "Level 3: Johan" +
+                "Level 2: 2", result.toString());
         /*!*/
     }
     
     public interface Visitor {
+        public Visitor beforeChildren();
         public Visitor visitString(String s);
         public Visitor visitInteger(Integer i);
-        
+        public Visitor afterChildren();
     }
 }

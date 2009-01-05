@@ -1,7 +1,6 @@
 package com.agical.jambda;
 
-import static com.agical.jambda.Sequence.concat;
-import static com.agical.jambda.Sequence.foldLeft;
+import static com.agical.jambda.Sequence.*;
 
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
@@ -11,12 +10,19 @@ public class Tree {
 
     public abstract static class AbstractNode<V> {
         Option<Iterable<AbstractNode<V>>> children1 = Option.<Iterable<AbstractNode<V>>>none();
-        
+        private final Fn1<V, V> beforeChildren;
+        private final Fn1<V, V> afterChildren;
+
         public AbstractNode() {
-            
+            beforeChildren = Functions.identity();
+            afterChildren = Functions.identity();
+        }
+        public AbstractNode(Fn1<V, V> beforeChildren, Fn1<V, V> afterChildren) {
+            this.beforeChildren = beforeChildren;
+            this.afterChildren = afterChildren;
         }
 
-        public Iterable<AbstractNode<V>> add(final AbstractNode<V>... newChildren) {
+        public Iterable<AbstractNode<V>> add(final AbstractNode<V> newChildren) {
             children1=children1.map(new Fn1<Iterable<AbstractNode<V>>, Option<Iterable<AbstractNode<V>>>>() {
                 public Option<Iterable<AbstractNode<V>>> apply(Iterable<AbstractNode<V>> current) {
                     return Option.some(concat(current, newChildren));
@@ -43,20 +49,16 @@ public class Tree {
         public V traverse(final V visitor) {
             V accept = accept(visitor);
             
-            V map = children1.map(new Fn2<Iterable<AbstractNode<V>>, V, V>(){
+            return children1.map(new Fn2<Iterable<AbstractNode<V>>, V, V>(){
                 public V apply(Iterable<AbstractNode<V>> arg, V v) {
-                    V foldLeft = foldLeft(arg, new Fn2<AbstractNode<V>, V, V>() {
+                    return afterChildren.apply(foldLeft(arg, new Fn2<AbstractNode<V>, V, V>() {
                         public V apply(AbstractNode<V> node, V localVisitor) {
                             return node.traverse(localVisitor);
                         }
-                    }, v);
-                    return foldLeft;
+                    }, beforeChildren.apply(v)));
                 }
                 
             }.rightCurry(accept), Functions.<V>constantly(accept));
-            
-            
-            return map;
         }
         public abstract V accept(V visitor);
     }
@@ -72,14 +74,21 @@ public class Tree {
     public static class Node<T, V> extends AbstractNode<V> {
         private final T data;
         private final Fn2<T, V, V> onVisit;
-    
+
+        public Node(T data, Fn2<T, V, V> onVisit, Fn1<V, V> beforeChildren, Fn1<V, V> afterChildren) {
+            super(beforeChildren, afterChildren);
+            this.data = data;
+            this.onVisit = onVisit;
+        }
+
         /**
-         * Use this constructor to create new nodes
+         * Use this constructor to create new nodes if you are not interested in 
          * 
          * @param data The data of the node
          * @param onVisit A function that executes on visits
          */
         public Node(T data, Fn2<T, V, V> onVisit) {
+            super();
             this.data = data;
             this.onVisit = onVisit;
         }

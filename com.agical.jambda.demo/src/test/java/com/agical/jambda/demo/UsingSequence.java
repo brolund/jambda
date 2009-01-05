@@ -186,6 +186,9 @@ public class UsingSequence {
     
     @Test
     public void limitACollection() throws Exception {
+        /*!
+        =takeWhile= can limit a collection to end when a condition is satisfied. 
+        */
         Iterable<Integer> naturalNumbers = Sequence.range(plus(integerType).apply(1), 0);
         
         Iterable<Integer> numbersUpTo5 = Sequence.takeWhile(naturalNumbers, smallerThan(integerType).rightCurry(6));
@@ -197,6 +200,7 @@ public class UsingSequence {
         assertEquals(new Integer(4), iterator.next());
         assertEquals(new Integer(5), iterator.next());
         assertFalse(iterator.hasNext());
+        /*!*/
     }
 
     
