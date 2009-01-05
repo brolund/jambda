@@ -35,7 +35,7 @@ public abstract class Sequence {
 		return Arrays.asList(elements);
 	}
 
-    public static <T> Iterable<T> concatenate(final Iterable<T> sequence, final T ... appendix) {
+    public static <T> Iterable<T> concat(final Iterable<T> sequence, final T ... appendix) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
                 return new ImmutableIterator<T>() {
