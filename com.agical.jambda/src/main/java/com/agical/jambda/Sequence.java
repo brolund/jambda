@@ -3,6 +3,7 @@ package com.agical.jambda;
 import static com.agical.jambda.Option.none;
 import static com.agical.jambda.Option.some;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -33,7 +34,29 @@ public abstract class Sequence {
     public static <T> Iterable<T> createSequence(T ... elements) {
 		return Arrays.asList(elements);
 	}
-	
+
+    public static <T> Iterable<T> concatenate(final Iterable<T> sequence, final T ... appendix) {
+        return new Iterable<T>() {
+            public Iterator<T> iterator() {
+                return new ImmutableIterator<T>() {
+                    Iterator<T> firstSequence = sequence.iterator();
+                    Iterator<T> lastSequence = createSequence(appendix).iterator();
+                    public boolean hasNext() {
+                        return firstSequence.hasNext()||lastSequence.hasNext();
+                    }
+
+                    public T next() {
+                        return firstSequence.hasNext() 
+                            ? firstSequence.next()
+                            : lastSequence.next();
+                    }
+                };
+            }
+            
+        };
+    }
+    
+    
 	public static <TIn, TOut> TOut foldLeft(Iterable<TIn> source, Fn2<TIn, TOut, TOut> fn, TOut accumulator) {
 		return foldLeft(source.iterator(), fn, accumulator); 
 	}

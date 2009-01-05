@@ -74,6 +74,7 @@ public class UsingSequence {
         assertEquals("Daniel2", iterator.next());
         assertEquals("Johan2", iterator.next());
         assertEquals("Joakim2", iterator.next());
+        assertFalse(iterator.hasNext());
         /*!*/
     }
     

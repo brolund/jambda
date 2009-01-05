@@ -14,7 +14,8 @@ import com.agical.jambda.demo.practical.PracticalUsages;
 @SuiteClasses({UsingFunctions.class, 
                 UsingOptions.class, 
                 UsingUnions.class, 
-                UsingSequence.class, 
+                UsingSequence.class,
+                MakingAGenericTree.class,
                 PracticalUsages.class, 
                 Euler.class})
 public class TestSuite {
