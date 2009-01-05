@@ -3,15 +3,10 @@ package com.agical.jambda.demo;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-
 import org.junit.Test;
 
-import com.agical.jambda.Sequence;
-import com.agical.jambda.Strings;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
-import com.agical.jambda.Tree.AbstractNode;
 import com.agical.jambda.Tree.Node;
 
 
@@ -39,12 +34,12 @@ public class MakingAGenericTree {
                 return visitor.visitString(string);
             }
         };
-        Fn1<Visitor, Visitor> before = new Fn1<Visitor, Visitor>() {
+        Fn1<Visitor, Visitor> beforeChildren = new Fn1<Visitor, Visitor>() {
             public Visitor apply(Visitor visitor) {
                 return visitor.beforeChildren();
             }
         };
-        Fn1<Visitor, Visitor> after = new Fn1<Visitor, Visitor>() {
+        Fn1<Visitor, Visitor> afterChildren = new Fn1<Visitor, Visitor>() {
             public Visitor apply(Visitor visitor) {
                 return visitor.afterChildren();
             }
@@ -53,23 +48,19 @@ public class MakingAGenericTree {
         /*!
         These functions should be kept in conjunction with the specific visitor.
          
-        Now lets create the nodes: 
+        Now lets build the tree. 
         */
-        Node<Integer,Visitor> node1 = new Node<Integer,Visitor>(1, onVisitInteger, before, after);
-        Node<Integer,Visitor> node2 = new Node<Integer,Visitor>(2, onVisitInteger, before, after);
-        Node<String,Visitor> nodeDaniel = new Node<String,Visitor>("Daniel", onVisitString, before, after);
-        Node<String,Visitor> nodeJohan = new Node<String,Visitor>("Johan", onVisitString, before, after);
-        /*!
-        ...and now we build the tree: 
-        */
-        node1.add(nodeDaniel);
-        node1.add(node2);
-        nodeDaniel.add(nodeJohan);
+        Node<Integer,Visitor> root = Node.create(1, onVisitInteger, beforeChildren, afterChildren);
+
+        root.add(
+                root.create("Daniel", onVisitString)
+                    .add("Johan", onVisitString))
+            .add(2, onVisitInteger);
         /*!
         Finally, we create a visitor and traverse the created tree: 
         */
         final StringBuffer result = new StringBuffer();
-        node1.traverse(new Visitor(){
+        root.traverse(new Visitor(){
             int level = 1;
             public Visitor visitInteger(Integer i) {
                 append(i);
