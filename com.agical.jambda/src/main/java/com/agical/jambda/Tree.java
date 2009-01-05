@@ -10,17 +10,15 @@ public class Tree {
     public abstract static class AbstractNode<V> {
         Iterable<AbstractNode<V>> children = Sequence.<AbstractNode<V>>empty();
         
-        public AbstractNode<V> add(AbstractNode<V> child) {
-            children = concat(children, child);
-            return this;
+        public Iterable<AbstractNode<V>> add(AbstractNode<V>... newChildren) {
+            return children = concat(children, newChildren);
         }
         public V traverse(final V visitor) {
-            accept(visitor);
             return foldLeft(children, new Fn2<AbstractNode<V>, V, V>() {
                 public V apply(AbstractNode<V> node, V localVisitor) {
                     return node.traverse(localVisitor);
                 }
-            }, visitor);
+            }, accept(visitor));
         }
         public abstract V accept(V visitor);
     }
