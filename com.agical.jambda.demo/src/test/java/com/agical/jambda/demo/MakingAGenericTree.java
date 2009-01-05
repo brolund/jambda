@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.agical.jambda.Functions.Fn2;
+import com.agical.jambda.Tree.AbstractNode;
 import com.agical.jambda.Tree.Node;
 
 
@@ -33,14 +34,14 @@ public class MakingAGenericTree {
         /*!
         Now lets create the nodes: 
         */
-        Node<Integer,Visitor> node1 = new Node<Integer,Visitor>(1, onVisitInteger);
-        Node<Integer,Visitor> node2 = new Node<Integer,Visitor>(2, onVisitInteger);
-        Node<String,Visitor> nodeDaniel = new Node<String,Visitor>("Daniel", onVisitString);
-        Node<String,Visitor> nodeJohan = new Node<String,Visitor>("Johan", onVisitString);
+        AbstractNode<Visitor> node1 = new Node<Integer,Visitor>(1, onVisitInteger);
+        AbstractNode<Visitor> node2 = new Node<Integer,Visitor>(2, onVisitInteger);
+        AbstractNode<Visitor> nodeDaniel = new Node<String,Visitor>("Daniel", onVisitString);
+        AbstractNode<Visitor> nodeJohan = new Node<String,Visitor>("Johan", onVisitString);
         /*!
         ...and now we build the tree: 
         */
-        node1.add(nodeDaniel);
+        Iterable<AbstractNode<Visitor>> add = node1.add(nodeDaniel);
         node1.add(node2);
         nodeDaniel.add(nodeJohan);
         /*!

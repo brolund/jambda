@@ -81,7 +81,7 @@ public abstract class Numeric<T> {
         return numType.divide(sum(numType, source), numType.fromInt(count(source)));
     }
     
-    public static IntegerType integerType = new IntegerType();
+    public static final IntegerType integerType = new IntegerType();
     
     public static class IntegerType extends Numeric<Integer>{
 	    public Integer zero() { return 0; }
@@ -101,7 +101,7 @@ public abstract class Numeric<T> {
         public Boolean smallerThan(Integer x1, Integer x2) { return x1 < x2; }
 	}
     
-    public static LongType longType = new LongType();
+    public static final LongType longType = new LongType();
     
     public static class LongType extends Numeric<Long>{
         public Long zero() { return 0l; }
@@ -121,7 +121,7 @@ public abstract class Numeric<T> {
         public Boolean smallerThan(Long x1, Long x2) { return x1 < x2; }
     }
 	
-    public static FloatType floatType = new FloatType();
+    public static final FloatType floatType = new FloatType();
 
     public static class FloatType extends Numeric<Float>{
         public Float zero() { return 0f; }
@@ -141,7 +141,7 @@ public abstract class Numeric<T> {
         public Boolean smallerThan(Float x1, Float x2) { return x1 < x2; }
     }
     
-    public static DoubleType doubleType = new DoubleType();
+    public static final DoubleType doubleType = new DoubleType();
 
 	public static class DoubleType extends Numeric<Double>{
 	    public Double zero() { return 0d; }
@@ -161,7 +161,7 @@ public abstract class Numeric<T> {
         public Boolean smallerThan(Double x1, Double x2) { return x1 < x2; }
     }
 
-    public static BigIntegerType bigIntegerType = new BigIntegerType();
+    public static final BigIntegerType bigIntegerType = new BigIntegerType();
 
     public static class BigIntegerType extends Numeric<BigInteger>{
         public BigInteger zero() { return BigInteger.ZERO; }
@@ -182,7 +182,7 @@ public abstract class Numeric<T> {
         public Boolean smallerThan(BigInteger x1, BigInteger x2) { return x1.compareTo(x2) == -1; }
     }
     
-    public static BigDecimalType bigDecimalType = new BigDecimalType();
+    public static final BigDecimalType bigDecimalType = new BigDecimalType();
 
     public static class BigDecimalType extends Numeric<BigDecimal>{
         public BigDecimal zero() { return BigDecimal.ZERO; }
