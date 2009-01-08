@@ -16,19 +16,17 @@ public class Functions {
 		}
         
         public Fn0<R> curry(final T arg) {
-            final Fn1<T, R> origFn = this;
             return new Fn0<R>() {
                 public R apply() {
-                    return origFn.apply(arg);
+                    return Fn1.this.apply(arg);
                 }
             };
         }
 
 		public <R2> Fn1<T, R2> compose(final Fn1<R, R2> g) {
-        	final Fn1<T, R> f = this;
         	return new Fn1<T, R2>() {
                 public R2 apply(T x) {
-                    return g.apply(f.apply(x));
+                    return g.apply(Fn1.this.apply(x));
                 }
             };
         }
@@ -38,19 +36,17 @@ public class Functions {
         public abstract R apply(T1 arg1, T2 arg2);
 
         public Fn1<T2, R> apply(final T1 arg1) {
-            final Fn2<T1, T2, R> origFn = this;
             return new Fn1<T2, R>() {
                 public R apply(T2 arg2) {
-                    return origFn.apply(arg1, arg2);
+                    return Fn2.this.apply(arg1, arg2);
                 }
             };
         }
         
         public Fn1<T1, R> rightCurry(final T2 arg2) {
-            final Fn2<T1, T2, R> origFn = this;
             return new Fn1<T1, R>() {
                 public R apply(T1 arg1) {
-                    return origFn.apply(arg1, arg2);
+                    return Fn2.this.apply(arg1, arg2);
                 }
             };
         }
@@ -68,10 +64,9 @@ public class Functions {
         }
         
         public Fn2<T2, T3, R> apply(final T1 arg1) {
-            final Fn3<T1, T2, T3, R> origFn = this;
             return new Fn2<T2, T3, R>() {
                 public R apply(T2 arg2, T3 arg3) {
-                    return origFn.apply(arg1, arg2, arg3);
+                    return Fn3.this.apply(arg1, arg2, arg3);
                 }
             };
         }
@@ -103,10 +98,9 @@ public class Functions {
         }
         
         public Fn3<T2, T3, T4, R> apply(final T1 arg1) {
-            final Fn4<T1, T2, T3, T4, R> origFn = this;
             return new Fn3<T2, T3, T4, R>() {
                 public R apply(T2 arg2, T3 arg3, T4 arg4) {
-                    return origFn.apply(arg1, arg2, arg3, arg4);
+                    return Fn4.this.apply(arg1, arg2, arg3, arg4);
                 }
             };        
         }
@@ -144,18 +138,16 @@ public class Functions {
         }
 
         public Fn4<T2, T3, T4, T5, R> apply(final T1 arg1) {
-            final Fn5<T1, T2, T3, T4, T5, R> origFn = this;
             return new Fn4<T2, T3, T4, T5, R>() {
                 public R apply(T2 arg2, T3 arg3, T4 arg4, T5 arg5) {
-                    return origFn.apply(arg1, arg2, arg3, arg4, arg5);
+                    return Fn5.this.apply(arg1, arg2, arg3, arg4, arg5);
                 }
             };
         }
         public Fn4<T1, T2, T3, T4, R> rightCurry(final T5 arg5) {
-            final Fn5<T1, T2, T3, T4, T5, R> origFn = this;
             return new Fn4<T1, T2, T3, T4, R>() {
                 public R apply(T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
-                    return origFn.apply(arg1, arg2, arg3, arg4, arg5);
+                    return Fn5.this.apply(arg1, arg2, arg3, arg4, arg5);
                 }
             };
         }        
@@ -194,10 +186,9 @@ public class Functions {
         }
 
         public Fn5<T2, T3, T4, T5, T6, R> apply(final T1 arg1) {
-            final Fn6<T1, T2, T3, T4, T5, T6, R> origFn = this;
             return new Fn5<T2, T3, T4, T5, T6, R>() {
                 public R apply(T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6) {
-                    return origFn.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+                    return Fn6.this.apply(arg1, arg2, arg3, arg4, arg5, arg6);
                 }
             };
         }        
@@ -207,10 +198,9 @@ public class Functions {
         }
 
         public Fn5<T1, T2, T3, T4, T5, R> rightCurry(final T6 arg6) {
-            final Fn6<T1, T2, T3, T4, T5, T6, R> origFn = this;
             return new Fn5<T1, T2, T3, T4, T5, R>() {
                 public R apply(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) {
-                    return origFn.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+                    return Fn6.this.apply(arg1, arg2, arg3, arg4, arg5, arg6);
                 }
             };
         }       
