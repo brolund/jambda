@@ -2,6 +2,8 @@ package com.agical.jambda;
 
 import static com.agical.jambda.Sequence.*;
 
+import java.util.Arrays;
+
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;

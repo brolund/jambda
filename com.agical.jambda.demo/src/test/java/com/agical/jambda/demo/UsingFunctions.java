@@ -1,13 +1,18 @@
 package com.agical.jambda.demo;
 
-import static org.junit.Assert.assertEquals;
+import static com.agical.jambda.demo.DemoFunctions.*;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
+import com.agical.jambda.Functions;
+import com.agical.jambda.Numeric;
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
-import static com.agical.jambda.demo.DemoFunctions.*;
+import com.agical.jambda.Functions.Fn2;
+import com.agical.jambda.Functions.Fn3;
+import com.agical.jambda.Numeric.IntegerType;
 
 public class UsingFunctions {
     /*!!
@@ -148,4 +153,69 @@ public class UsingFunctions {
         
     }
 
+    @Test
+    public void currying() throws Exception {
+        /*!
+        *Currying* in functional programming is just what it sounds like; 
+        you take a function an you spice it with one or more of the values it requires,
+        and it produces a new function. 
+        
+        The simplest example in Jambda is this:
+        */
+        Fn0<User> spicedUp = userCreator().curry("Daniel");
+        /*!
+        The =userCreator= is a function that takes a String and produces a
+        User with that name. By *currying* it with the name, a new  
+        function is created, and that function will create and return a User when 
+        being called:
+        */
+        User user = spicedUp.apply();
+        /*!*/
+    }
+    
+    @Test
+    public void curryingFunctionsWithSeveralParameters() throws Exception {
+        /*!
+        For functions that take more parameters you have to curry from the
+        left or from the right. 
+        
+        In this case we use the =plus= function that takes two integers and adds 
+        them to produce another integer. 
+        */
+        Fn2<Integer, Integer, Integer> plus = Numeric.plus(IntegerType.integerType);
+        /*!
+        Here we do it both left- and right curry style:
+        */
+        Fn1<Integer, Integer> rightCurried = plus.rightCurry(2);
+        Fn1<Integer, Integer> leftCurried = plus.apply(3);
+        /*!
+        After this we got a function that waits for the second argument to complete the addition.
+        */
+        Integer rightCurryResult = rightCurried.apply(3);
+        Integer leftCurryResult = leftCurried.apply(2);
+        assertEquals(new Integer(5), rightCurryResult);
+        assertEquals(new Integer(5), leftCurryResult);
+        /*!
+        */
+    }
+
+    @Test
+    public void moreAboutCurryingInJambda() throws Exception {
+        /*!
+        The function objects extend each other, i.e. Fn1 extends Fn0, Fn2 extends Fn1
+        and so on. The cunning part of this is that the generic return type (e.g. R) of 
+        the inherited functions becomes a function (e.g. Fn0&lt;R&gt;) in the inheriting function.
+        Hence, all functions are left curried through this inheritance.  
+        */
+        Fn3<Double, Integer, String, StringBuffer> bufferer = new Functions.Fn3<Double, Integer, String, StringBuffer>() {
+            public StringBuffer apply(Double arg1, Integer arg2, String arg3) {
+                return new StringBuffer().append(arg1).append(arg2).append(arg3);
+            }
+        };
+        Fn2<Integer, String, StringBuffer> curry1 = bufferer.apply(2D);
+        Fn1<String, StringBuffer> curry2 = curry1.apply(1);
+        StringBuffer result = curry2.apply("Last curry element");
+        assertEquals("2.01Last curry element", result.toString());
+        /*!*/
+    }
 }
