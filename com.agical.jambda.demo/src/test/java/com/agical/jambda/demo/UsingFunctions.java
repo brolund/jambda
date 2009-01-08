@@ -12,6 +12,9 @@ import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 import com.agical.jambda.Functions.Fn3;
+import com.agical.jambda.Functions.Fn4;
+import com.agical.jambda.Functions.Fn5;
+import com.agical.jambda.Functions.Fn6;
 import com.agical.jambda.Numeric.IntegerType;
 
 public class UsingFunctions {
@@ -170,6 +173,7 @@ public class UsingFunctions {
         being called:
         */
         User user = spicedUp.apply();
+        assertEquals("Daniel", user.getName());
         /*!*/
     }
     
@@ -202,20 +206,46 @@ public class UsingFunctions {
     @Test
     public void moreAboutCurryingInJambda() throws Exception {
         /*!
-        The function objects extend each other, i.e. Fn1 extends Fn0, Fn2 extends Fn1
-        and so on. The cunning part of this is that the generic return type (e.g. R) of 
-        the inherited functions becomes a function (e.g. Fn0&lt;R&gt;) in the inheriting function.
-        Hence, all functions are left curried through this inheritance.  
+        All functions of N arguments (N=[2,6]) have an apply (*leftCurry*) 
+        that takes the left-most M (M=[1,N-1]) arguments and returns a 
+        function of N-M arguments.
         */
-        Fn3<Double, Integer, String, StringBuffer> bufferer = new Functions.Fn3<Double, Integer, String, StringBuffer>() {
-            public StringBuffer apply(Double arg1, Integer arg2, String arg3) {
-                return new StringBuffer().append(arg1).append(arg2).append(arg3);
-            }
-        };
-        Fn2<Integer, String, StringBuffer> curry1 = bufferer.apply(2D);
-        Fn1<String, StringBuffer> curry2 = curry1.apply(1);
-        StringBuffer result = curry2.apply("Last curry element");
-        assertEquals("2.01Last curry element", result.toString());
+        Functions.Fn6<Byte, Short, Integer, Long, Float, Double, String> fn6 = 
+            new Fn6<Byte, Short, Integer, Long, Float, Double, String>() {
+                public String apply(Byte b, Short s, Integer i,Long l, Float f, Double d) {
+                    return b+s+i+l+f+d+"";
+                }
+          
+            };
+        /*!
+        This is an example where, for N is 6 and M is 1, we curry down to the result: 
+        */
+        Fn5<Short, Integer, Long, Float, Double, String> fn5 = fn6.apply((byte)1);
+        Fn4<Integer,Long,Float,Double,String> fn4 = fn5.apply((short)2);
+        Fn3<Long,Float,Double,String> fn3 = fn4.apply(4);
+        Fn2<Float, Double, String> fn2 = fn3.apply(8L);
+        Fn1<Double,String> fn1 = fn2.apply(16F);
+        String result = fn1.apply(32D);
+        
+        assertEquals("63.0", result);
+        /*!
+        There is also a =rightCurry= method that does the same from the right. 
+        */
+        Fn5<Byte, Short, Integer, Long, Float, String> fn5_right = fn6.rightCurry(64D);
+        Fn4<Byte, Short, Integer, Long, String> fn4_right = fn5_right.rightCurry(32F);
+        Fn3<Byte, Short, Integer, String> fn3_right = fn4_right.rightCurry(16L);
+        Fn2<Byte, Short, String> fn2_right = fn3_right.rightCurry(8);
+        Fn1<Byte, String> fn1_right = fn2_right.rightCurry((short)4);
+        Fn0<String> fn0_right = fn1_right.curry((byte)2);
+        
+        String resultOfRightCurry = fn0_right.apply();
+        assertEquals("126.0", resultOfRightCurry);
+        /*!
+        Several arguments can be passed, both from the left and from the right: 
+        */
+        Fn1<Long, String> fn1_leftAndRight = fn6.apply((byte)1, (short)2, 4).rightCurry(100F, 1000D);
+        String resultOfLeftAndRightCurry = fn1_leftAndRight.apply(10000L);
+        assertEquals("11107.0", resultOfLeftAndRightCurry);
         /*!*/
     }
 }

@@ -75,7 +75,17 @@ public class Functions {
                 }
             };
         }
-        
+        public Fn2<T1, T2, R> rightCurry(final T3 arg3) {
+            return new Fn2<T1, T2, R>() {
+                public R apply(T1 arg1, T2 arg2) {
+                    return Fn3.this.apply(arg1, arg2, arg3);
+                }
+            };
+        }        
+        public Fn1<T1, R> rightCurry(final T2 arg2, final T3 arg3) {
+            return rightCurry(arg3).rightCurry(arg2);
+        }
+
         public R apply(Tuple3<T1, T2, T3> arg) {
         	return this.apply(arg.getFirst(), arg.getSecond(), arg.getThird());
         }
@@ -100,7 +110,19 @@ public class Functions {
                 }
             };        
         }
-        
+        public Fn3<T1, T2, T3, R> rightCurry(final T4 arg4) {
+            return new Fn3<T1, T2, T3, R>() {
+                public R apply(T1 arg1, T2 arg2, T3 arg3) {
+                    return Fn4.this.apply(arg1, arg2, arg3, arg4);
+                }
+            };
+        }        
+        public Fn2<T1, T2, R> rightCurry(final T3 arg3, final T4 arg4) {
+            return rightCurry(arg4).rightCurry(arg3);
+        }
+        public Fn1<T1, R> rightCurry(final T2 arg2, final T3 arg3, final T4 arg4) {
+            return rightCurry(arg4).rightCurry(arg3).rightCurry(arg2);
+        }
         public R apply(Tuple4<T1, T2, T3, T4> arg) {
         	return this.apply(arg.getFirst(), arg.getSecond(), arg.getThird(), arg.getForth());
         }
@@ -129,7 +151,24 @@ public class Functions {
                 }
             };
         }
-        
+        public Fn4<T1, T2, T3, T4, R> rightCurry(final T5 arg5) {
+            final Fn5<T1, T2, T3, T4, T5, R> origFn = this;
+            return new Fn4<T1, T2, T3, T4, R>() {
+                public R apply(T1 arg1, T2 arg2, T3 arg3, T4 arg4) {
+                    return origFn.apply(arg1, arg2, arg3, arg4, arg5);
+                }
+            };
+        }        
+        public Fn3<T1, T2, T3, R> rightCurry(final T4 arg4, final T5 arg5) {
+            return rightCurry(arg5).rightCurry(arg4);
+        }
+        public Fn2<T1, T2, R> rightCurry(final T3 arg3, final T4 arg4, final T5 arg5) {
+            return rightCurry(arg5).rightCurry(arg4).rightCurry(arg3);
+        }
+        public Fn1<T1, R> rightCurry(final T2 arg2, final T3 arg3, final T4 arg4, final T5 arg5) {
+            return rightCurry(arg5).rightCurry(arg4).rightCurry(arg3).rightCurry(arg2);
+        }
+
         public R apply(Tuple5<T1, T2, T3, T4, T5> arg) {
         	return this.apply(arg.getFirst(), arg.getSecond(), arg.getThird(), arg.getForth(), arg.getFifth());
         }
@@ -166,6 +205,28 @@ public class Functions {
         public R apply(Tuple6<T1, T2, T3, T4, T5, T6> arg) {
         	return this.apply(arg.getFirst(), arg.getSecond(), arg.getThird(), arg.getForth(), arg.getFifth(), arg.getSixth());
         }
+
+        public Fn5<T1, T2, T3, T4, T5, R> rightCurry(final T6 arg6) {
+            final Fn6<T1, T2, T3, T4, T5, T6, R> origFn = this;
+            return new Fn5<T1, T2, T3, T4, T5, R>() {
+                public R apply(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5) {
+                    return origFn.apply(arg1, arg2, arg3, arg4, arg5, arg6);
+                }
+            };
+        }       
+        public Fn4<T1, T2, T3, T4, R> rightCurry(final T5 arg5, final T6 arg6) {
+            return rightCurry(arg6).rightCurry(arg5);
+        }
+        public Fn3<T1, T2, T3, R> rightCurry(final T4 arg4, final T5 arg5, final T6 arg6) {
+            return rightCurry(arg6).rightCurry(arg5).rightCurry(arg4);
+        }
+        public Fn2<T1, T2, R> rightCurry(final T3 arg3, final T4 arg4, final T5 arg5, final T6 arg6) {
+            return rightCurry(arg6).rightCurry(arg5).rightCurry(arg4).rightCurry(arg3);
+        }
+        public Fn1<T1, R> rightCurry(final T2 arg2, final T3 arg3, final T4 arg4, final T5 arg5, final T6 arg6) {
+            return rightCurry(arg6).rightCurry(arg5).rightCurry(arg4).rightCurry(arg3).rightCurry(arg2);
+        }
+
     }
 
     /// --------------
