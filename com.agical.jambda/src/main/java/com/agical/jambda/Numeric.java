@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import com.agical.jambda.Functions.*;
+
+import static com.agical.jambda.Numeric.*;
 import static com.agical.jambda.Sequence.*;
 
 public abstract class Numeric<T> {
@@ -80,6 +82,7 @@ public abstract class Numeric<T> {
     public static <T, TNum extends Numeric<T>> T average(TNum numType, Iterable<T> source) {
         return numType.divide(sum(numType, source), numType.fromInt(count(source)));
     }
+    
     
     public static final IntegerType integerType = new IntegerType();
     
@@ -205,4 +208,5 @@ public abstract class Numeric<T> {
         public Boolean smallerThan(BigDecimal x1, BigDecimal x2) { return x1.compareTo(x2) == -1; }
     }
 
+    public static final Iterable<Integer> naturalNumbers = Sequence.range(plus(integerType).apply(1), 0);
 }

@@ -8,6 +8,7 @@ import java.net.URL;
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
+import com.agical.jambda.Numeric;
 import com.agical.jambda.Sequence;
 import com.agical.jambda.Functions.Fn2;
 
@@ -78,9 +79,7 @@ public class CreatingATemplateEngine {
     }
 
     private String loreMipsum(int nrOfSentences) {
-        Iterable<Integer> naturalNumbers = Sequence.range(plus(integerType).apply(1), 0);
-        
-        Iterable<Integer> numbersUpToNrOfSentences = Sequence.takeWhile(naturalNumbers, smallerThan(integerType).rightCurry(nrOfSentences));
+        Iterable<Integer> numbersUpToNrOfSentences = Sequence.takeWhile(Numeric.naturalNumbers, smallerThan(integerType).rightCurry(nrOfSentences));
 
         return Sequence.foldLeft(numbersUpToNrOfSentences, new Fn2<Integer,String,String>() {
             public String apply(Integer dummy, String accumulator) {
