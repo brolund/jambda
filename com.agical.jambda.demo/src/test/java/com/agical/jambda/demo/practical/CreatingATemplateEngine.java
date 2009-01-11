@@ -1,12 +1,14 @@
 package com.agical.jambda.demo.practical;
 
+import static com.agical.jambda.Numeric.*;
+import static org.junit.Assert.*;
+
 import java.net.URL;
 
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
 import com.agical.jambda.Sequence;
-import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 
 public class CreatingATemplateEngine {
@@ -19,33 +21,74 @@ public class CreatingATemplateEngine {
         
         Functions can be a way to provide that variation.
         
-        In this case we want to render a list of links as a main menu.
+        In this case we want to render in HTML a list of links as a main menu.
         */
         Iterable<Link> links = createLinks();
         
-        Fn2<String, String, String> stackAccumulator = new Fn2<String, String, String>() {
-            public String apply(String string, String accumulator) {
-                return accumulator + string + "\n<br/>\n";
-            }
-        };
-        
-        String result = Sequence.foldLeft(Sequence.map(links, linkToString()), stackAccumulator, "");
+        String result = Sequence.foldLeft(
+                Sequence.map(links, Rendering.linkToString()), 
+                Rendering.stackAccumulator(), 
+                "");
         /*!
         =createLinks()= creates a bunch of links for us.
         The =result= is:
         >>>>
         #{result}
         <<<<
+        The link transformer looks like this:
+        >>>>
+        #{clazz('com.agical.jambda.demo.practical.Rendering').linkToString}
+        <<<<
+        The stack accumulator looks like this:
+        >>>>
+        #{clazz('com.agical.jambda.demo.practical.Rendering').stackAccumulator}
+        <<<<
         */
         Storage.store("result", result);
     }
 
-    private static Fn1<Link, String> linkToString() {
-        return new Fn1<Link, String>() {
-            public String apply(Link arg) {
-                return "<a href=\"" + arg.getUrl() + "\">" + arg.getText() + "</a>";
+    @Test
+    public void forAnArticle() throws Exception {
+        /*!
+        In the same way, we can present articles:
+        */
+        Iterable<Article> articles = createArticles();
+        String result = Sequence.foldLeft(
+                Sequence.map(articles, Rendering.articleToString()), 
+                Rendering.stackAccumulator(), 
+                "");
+        /*!
+        The =result= is:
+        >>>>
+        #{result}
+        <<<<
+        */
+        Storage.store("result", result);
+        
+        assertEquals("Lorem ipsum dolor sit amet, consectetur adipisicing elit, \n" +
+                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ", loreMipsum(1));
+    }
+    
+    private Iterable<Article> createArticles() {
+        return Sequence.createSequence(
+                new Article("FP takes the lead", "Functional programming ...", loreMipsum(3)),
+                new Article("Java and functional programming", "Java isn't a bad option...", loreMipsum(2)),
+                new Article("Agical does it again", "Jambda takes the FP paradigm to Java...", loreMipsum(4))
+                );
+    }
+
+    private String loreMipsum(int nrOfSentences) {
+        Iterable<Integer> naturalNumbers = Sequence.range(plus(integerType).apply(1), 0);
+        
+        Iterable<Integer> numbersUpToNrOfSentences = Sequence.takeWhile(naturalNumbers, smallerThan(integerType).rightCurry(nrOfSentences));
+
+        return Sequence.foldLeft(numbersUpToNrOfSentences, new Fn2<Integer,String,String>() {
+            public String apply(Integer dummy, String accumulator) {
+                return "Lorem ipsum dolor sit amet, consectetur adipisicing elit, \n" +
+                       "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " + 
+                	   accumulator;
             }
-        };
+        }, "");
     }
 
     private Iterable<Link> createLinks() throws Exception {
