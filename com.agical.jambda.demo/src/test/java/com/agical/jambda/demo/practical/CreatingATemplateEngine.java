@@ -70,6 +70,14 @@ public class CreatingATemplateEngine {
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ", loreMipsum(1));
     }
     
+    @Test
+    public void addingItAllToAPage() throws Exception {
+        /*!
+        
+        */
+        
+    }
+    
     private Iterable<Article> createArticles() {
         return Sequence.createSequence(
                 new Article("FP takes the lead", "Functional programming ...", loreMipsum(3)),

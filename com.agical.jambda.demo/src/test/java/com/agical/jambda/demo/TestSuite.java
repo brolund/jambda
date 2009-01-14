@@ -16,6 +16,7 @@ import com.agical.jambda.demo.practical.PracticalUsages;
                 UsingUnions.class, 
                 UsingSequence.class,
                 MakingAGenericTree.class,
+                ParallelExecution.class,
                 PracticalUsages.class, 
                 Euler.class})
 public class TestSuite {
