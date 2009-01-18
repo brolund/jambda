@@ -15,20 +15,38 @@ import com.agical.jambda.Functions.Fn2;
 
 public class Parallel {
     
-    public static <T> Callable<T> callable(final Fn0<T> fn) {
-        return new Callable<T>() {
-            public T call() throws Exception {
+    /**
+     * Transform a Jambda function to a <code>Callable&lt;R&gt;</code> to 
+     * be used with the <code>java.util.concurrent</code> package.
+     * @param <R> The generic type
+     * @param fn Fn0&lt;R&gt;
+     * @return Callable&lt;R&gt;
+     */
+    public static <R> Callable<R> callable(final Fn0<R> fn) {
+        return new Callable<R>() {
+            public R call() throws Exception {
                 return fn.apply();
             }
         };
     }
     
-    public static <T> Iterable<T> exec(Iterable<Fn0<T>> source,
+    /**
+     * Execute the provided functions in parallel in at most <code>nrOfThreads</code>
+     * number of threads. The functions are all executed asap, and the returned 
+     * iterator will return the results in the same order they came in, as soon
+     * as they are available.
+     *  
+     * @param <T> The returned type of the function
+     * @param source The functions to execute
+     * @param nrOfThreads
+     * @return An iterable of the return value for the functions
+     */
+    public static <T> Iterable<T> parallel(Iterable<Fn0<T>> source,
             Integer nrOfThreads) {
-        return exec(source, Executors.newFixedThreadPool(nrOfThreads));
+        return parallel(source, Executors.newFixedThreadPool(nrOfThreads));
     }
     
-    public static <T> Iterable<T> exec(Iterable<Fn0<T>> source,
+    public static <T> Iterable<T> parallel(Iterable<Fn0<T>> source,
             final ExecutorService executorService) {
         return Sequence.map(
                 Sequence.foldLeft(

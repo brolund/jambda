@@ -15,7 +15,8 @@ public class ParallelExecution {
     @Test(timeout=500)
     public void executeFunctionWithTheSameReturnType() throws Exception {
         /*!
-        If you want to execute several functions in parallel:
+        Jambda can help you execute functions in parallel. In this case we create a 
+        function that we later curry with a number for the output.
         */
         Fn1<Integer,String> fn = new Fn1<Integer, String>() {
             public String apply(Integer nr) {
@@ -28,8 +29,8 @@ public class ParallelExecution {
                 }
             }
         };
-        Iterable<String> exec = 
-            Parallel.exec(Sequence.createSequence(
+        Iterable<String> results = 
+            Parallel.parallel(Sequence.createSequence(
                     fn.curry(1),
                     fn.curry(2),
                     fn.curry(3),
@@ -44,11 +45,12 @@ public class ParallelExecution {
         <<<<
         
         */
-        Storage.store("result", Sequence.foldLeft(exec, new Fn2<String, String, String>() {
+        String string = Sequence.foldLeft(results, new Fn2<String, String, String>() {
             public String apply(String arg, String accumulator) {
                 return accumulator+"\n"+arg;
             }
-        }, "")); 
+        }, "");
+        Storage.store("result", string); 
     }
     
 }
