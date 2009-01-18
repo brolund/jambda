@@ -32,13 +32,14 @@ public class Parallel {
     
     /**
      * Execute the provided functions in parallel in at most <code>nrOfThreads</code>
-     * number of threads. The functions are all executed asap, and the returned 
+     * number of threads. The functions are all executed asap, so don't use this for lazy 
+     * execution. The returned 
      * iterator will return the results in the same order they came in, as soon
      * as they are available.
      *  
      * @param <T> The returned type of the function
      * @param source The functions to execute
-     * @param nrOfThreads
+     * @param nrOfThreads The number of threads to use
      * @return An iterable of the return value for the functions
      */
     public static <T> Iterable<T> parallel(Iterable<Fn0<T>> source,
