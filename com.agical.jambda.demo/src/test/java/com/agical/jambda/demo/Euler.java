@@ -2,11 +2,12 @@ package com.agical.jambda.demo;
 
 import static com.agical.jambda.Numeric.*;
 import static com.agical.jambda.Sequence.*;
+import com.agical.jambda.Functions.*;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.agical.jambda.Functions.Fn1;
 
 public class Euler {
     /*!!
@@ -72,6 +73,7 @@ public class Euler {
                        modulo(integerType).rightCurry(2).compose(equalTo(integerType).apply(0))));
         
         assertEquals(new Integer(4613732), sum);
+        
         /*!*/
     }
 }

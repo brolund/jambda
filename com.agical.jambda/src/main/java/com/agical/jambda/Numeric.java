@@ -5,7 +5,6 @@ import java.math.BigInteger;
 
 import com.agical.jambda.Functions.*;
 
-import static com.agical.jambda.Numeric.*;
 import static com.agical.jambda.Sequence.*;
 
 public abstract class Numeric<T> {
@@ -207,6 +206,31 @@ public abstract class Numeric<T> {
         public Boolean greaterThan(BigDecimal x1, BigDecimal x2) { return x1.compareTo(x2) == 1; }
         public Boolean smallerThan(BigDecimal x1, BigDecimal x2) { return x1.compareTo(x2) == -1; }
     }
+    // Experimental
+    
+    /*
+      correlate1 :: [Double] -> [Double] -> Double 
+    æ correlate1 ks = sum . zipWith (*) ks 
 
+    æ correlate :: [Double] -> [Double] -> [Double] 
+    æ correlate ks [] = [] 
+    æ correlate ks xs = correlate1 ks xs : correlate ks (tail xs) 
+
+    æ convolute :: [Double] -> [Double] -> [Double] 
+    æ convolute ks = correlate (reverse ks) 
+    
+    private static <T, TNum extends Numeric<T>> T correlate1(TNum numType, Iterable<T> ks, Iterable<T> xs) {
+        return sum(numType, zipWith(ks, xs, multiply(numType)));
+    }
+
+    private static <T, TNum extends Numeric<T>> Iterable<T> correlate(TNum numType, Iterable<T> ks, Iterable<T> xs) {
+        return concat(correlate1(numType, ks, xs), correlate1(numType, ks, skip(1, xs)));
+    }
+    
+    public static <T, TNum extends Numeric<T>> Iterable<T> convolute(TNum numType, Iterable<T> ks, Iterable<T> xs) {
+        return correlate(numType, reverse(ks), xs);
+    }
+    */
+    
     public static final Iterable<Integer> naturalNumbers = Sequence.range(plus(integerType).apply(1), 0);
 }

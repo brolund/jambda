@@ -249,4 +249,24 @@ public class Functions {
     public static <TX, TY, TZ> Fn1<TX, TZ> compose(final Fn1<TX, TY> f, final Fn1<TY, TZ> g) {
         return f.compose(g);
     }
- }
+    
+    /* 
+    
+    // Implementation of the Y-combinator 
+    // - unless we accept references to 'this' from within an apply-method... :)
+    private abstract static class Recursive<A, R> extends Fn1<Recursive<A, R>, Fn1<A, R>> { }
+    
+    public static <A, R> Fn1<A, R> yCombinator(final Fn1<Fn1<A, R>, Fn1<A, R>> f) {
+        Recursive<A, R> rec = new Recursive<A, R>() {
+            public Fn1<A, R> apply(final Recursive<A, R> r) {
+                return new Fn1<A, R>() {
+                    public R apply(A a) {
+                        return f.apply(r.apply(r)).apply(a);
+                    }
+                };
+            }
+        };
+        return rec.apply(rec);
+    }
+    */
+}

@@ -1,7 +1,6 @@
 
 *** Wild and crazy ideas. Or not.
    - JambdaIterator with Option<T> instead of next()/hasNext()
-   - Y-combinator (unless we accept references to this from within an apply-method...)
    - Handle "Pure" funktions somehow. (annotations, constructor argument ...)
    - Add support for some basic parallelism.
    - Pre-cooked functions library
@@ -10,3 +9,19 @@
    - Make sure that all sequence operations are really lazy (some of them starts to read from its source on creation).
    - Implement concatenate and flatten.
    - Implement mapi
+   - Kanske sikta på att implementera hela (motsvarande) Haskells module PreludeList:
+       map, (++), filter, concat,
+       head, last, tail, init, null, length, (!!), 
+       foldl, foldl1, scanl, scanl1, foldr, foldr1, scanr, scanr1,
+       iterate, repeat, replicate, cycle,
+       take, drop, splitAt, takeWhile, dropWhile, span, break,
+       lines, words, unlines, unwords, reverse, and, or,
+       any, all, elem, notElem, lookup,
+       Sum, product, maximum, minimum, concatMap, 
+       zip, zip3, zipWith, zipWith3, unzip, unzip3
+     (samt eventuellt använda samma/mosvarande begrepp. (Tänker spec. på concat vs. append (++) 
+      - borde infoga funktionerns typer som ref.)
+   - Tillhandhålla funktioner för att skapa Iterators<T> från streams av olika slag.
+   - Kolla upp jparsec (jparsec.codehaus.org/) för att se om man kan få det att samarbeta med
+     jambda alt. implementera "monadisc parser combinators" som en del av jambda.
+     

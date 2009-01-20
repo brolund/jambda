@@ -3,6 +3,7 @@ package com.agical.jambda;
 import static com.agical.jambda.Option.none;
 import static com.agical.jambda.Option.some;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -33,7 +34,15 @@ public abstract class Sequence {
     public static <T> Iterable<T> createSequence(T ... elements) {
 		return Arrays.asList(elements);
 	}
-
+    
+    public static <T> Iterable<T> reverse(final Iterable<T> sequence) {
+        return null;
+    }
+    
+    public static <T> Iterable<T> skip(final int nSkip, final Iterable<T> sequence) {
+        return null;
+    }
+    
     public static <T> Iterable<T> concat(final Iterable<T> sequence, final T... appendix) {
         return new Iterable<T>() {
             public Iterator<T> iterator() {
