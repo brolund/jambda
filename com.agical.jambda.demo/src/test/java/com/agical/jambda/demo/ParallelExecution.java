@@ -1,21 +1,29 @@
 package com.agical.jambda.demo;
 
+import static org.junit.Assert.*;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
 import com.agical.jambda.Parallel;
 import com.agical.jambda.Sequence;
+import com.agical.jambda.Tuples;
 import com.agical.jambda.Unit;
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
+import com.agical.jambda.Tuples.Tuple2;
 
 public class ParallelExecution {
     
     @Test(timeout=500)
     public void executeFunctionWithTheSameReturnType() throws Exception {
         /*!
-        If you want to execute several functions in parallel:
+        Jambda can help you execute functions in parallel. In this case we create a 
+        function that we later curry with a number for the output.
         */
         Fn1<Integer,String> fn = new Fn1<Integer, String>() {
             public String apply(Integer nr) {
@@ -28,8 +36,8 @@ public class ParallelExecution {
                 }
             }
         };
-        Iterable<String> exec = 
-            Parallel.exec(Sequence.createSequence(
+        Iterable<String> results = 
+            Parallel.parallel(Sequence.createSequence(
                     fn.curry(1),
                     fn.curry(2),
                     fn.curry(3),
@@ -44,11 +52,58 @@ public class ParallelExecution {
         <<<<
         
         */
-        Storage.store("result", Sequence.foldLeft(exec, new Fn2<String, String, String>() {
+        String string = Sequence.foldLeft(results, new Fn2<String, String, String>() {
             public String apply(String arg, String accumulator) {
                 return accumulator+"\n"+arg;
             }
-        }, "")); 
+        }, "");
+        Storage.store("result", string); 
+    }
+    
+    public static Fn1<Long,Long> delay() {
+        return new Fn1<Long,Long>() {
+            public Long apply(Long sleep) {
+                try {
+                    Thread.sleep(sleep);
+                    return sleep;
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        ;
+    }
+    @Test
+    public void differentReturnValues() throws Exception {
+        /*!
+        If you need to have different return types, use the functions taking a 
+        =Tuple= of functions.
+        */
+        Fn1<Integer,String> delay1 = new Fn1<Integer,String>() {
+            public String apply(Integer sleep) {
+                return "Slept " + delay().apply(sleep.longValue()) + "ms";
+            }
+        };
+        Fn1<String,Long> delay2 = new Fn1<String,Long>() {
+            public Long apply(String sleep) {
+                return new Long(delay().apply(Long.parseLong(sleep)));
+            }
+        };
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        
+        long start = System.currentTimeMillis();
+        
+        Tuple2<Fn0<String>, Fn0<Long>> functions = Tuples.duo(delay1.curry(100),delay2.curry("101"));
+        Tuple2<String, Long> result = Parallel.parallel(functions, executor);
+        
+        long end = System.currentTimeMillis();
+        
+        assertEquals(result.getFirst(), "Slept 100ms");
+        assertEquals(result.getSecond(), new Long(101));
+
+        assertTrue("Should take at least 100ms", end-start>=100);
+        assertTrue("Should take less than 200ms due to threading", end-start<200);
+        /*!*/
     }
     
 }
