@@ -1,6 +1,9 @@
 package com.agical.jambda;
 
-import com.agical.jambda.Functions.*;
+import java.io.StringReader;
+import java.util.Iterator;
+
+import com.agical.jambda.Functions.Fn2;
 
 public class Strings {
 	
@@ -10,4 +13,24 @@ public class Strings {
 		        return arg1 + arg2;
 			}
 		};
+		
+	public static Iterable<Option<Character>> eachChar(final CharSequence string) {
+	    
+	    return new Iterable<Option<Character>>() {
+            public Iterator<Option<Character>> iterator() {
+                return new Iterator<Option<Character>>() {
+                    int index = 0;
+                    public boolean hasNext() {
+                        return string.length()>index;
+                    }
+                    public Option<Character> next() {
+                        return hasNext()?Option.some(new Character(string.charAt(index))):Option.<Character>none();
+                    }
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+	    };
+	}
 }

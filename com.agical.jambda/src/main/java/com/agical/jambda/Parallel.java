@@ -1,9 +1,7 @@
 package com.agical.jambda;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,6 +10,7 @@ import java.util.concurrent.Future;
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
+import com.agical.jambda.Tuples.Tuple2;
 
 public class Parallel {
     
@@ -61,15 +60,32 @@ public class Parallel {
                     }, 
                     new ArrayList<Future<T>>()), 
                 new Fn1<Future<T>, T>() {
-                    public T apply(Future<T> arg) {
-                        try {
-                            return arg.get();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        } catch (ExecutionException e) {
-                            throw new RuntimeException(e);
-                        }
+                    public T apply(Future<T> future) {
+                        return getFuture(future);
                     }
                 });
     }
+    
+    public static <R1, R2> Tuple2<R1,R2> parallel(Tuple2<Fn0<R1>, Fn0<R2>> functions, ExecutorService executorService) {
+        Future<R1> future1 = submit(executorService, functions.getFirst());
+        Future<R2> future2 = submit(executorService, functions.getSecond());
+        return Tuples.duo(getFuture(future1), getFuture(future2));
+    }
+
+    private static <R> Future<R> submit(ExecutorService executorService,
+            Fn0<R> fn) {
+        final Future<R> future = executorService.submit(callable(fn));
+        return future;
+    }
+    
+    private static <R> R getFuture(final Future<R> future) {
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
