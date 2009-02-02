@@ -4,13 +4,13 @@ require 'buildr/scala'
 VERSION_NUMBER = '1.0.0'
 # Group identifier for your projects
 GROUP = "jambda"
-COPYRIGHT = "(c) Agical AB 2008"
+COPYRIGHT = "(c) 2008-2009 Johan Kullbom, Daniel Brolund, Joakim Ohlrogge"
 
 # Specify Maven 2.0 remote repositories here, like this:
 repositories.remote << "http://www.ibiblio.org/maven2/"
 repositories.remote << "http://www.agical.com/maven2/"
 
-BUMBLEBEE  = ['com.agical.bumblebee:bumblebee-all:jar:1.0.3']
+BUMBLEBEE  = ['com.agical.bumblebee:bumblebee-all:jar:1.0.4']
 
 desc "The jambda project"
 define "jambda" do
