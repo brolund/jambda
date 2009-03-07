@@ -1,9 +1,13 @@
 package com.agical.jambda;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.Iterator;
 
+import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class Strings {
 	
@@ -33,4 +37,26 @@ public class Strings {
             }
 	    };
 	}
+    public static Iterable<Option<String>> eachLine(final String string) {
+        return new Iterable<Option<String>>() {
+            public Iterator<Option<String>> iterator() {
+                return new Iterator<Option<String>>() {
+                    int index = 0;
+                    public boolean hasNext() {
+                        return index>string.length();
+                    }
+                    public Option<String> next() {
+                        int newIndex = string.indexOf("\n", index);
+                        if(newIndex==-1) return Option.<String>none();
+                        String result = string.substring(index,newIndex);
+                        index = newIndex;
+                        return Option.some(result);
+                    }
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
 }

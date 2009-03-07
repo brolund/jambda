@@ -9,7 +9,8 @@ public class DemoFunctions {
     
     // These are functions due to problems parsing the file with QDox (used in Bumblebee)
     
-    public static Fn1<Greeting, String> greetingToString() {
+    public static final Fn1<Greeting, String> greetingToString = greetingToString();
+    private static Fn1<Greeting, String> greetingToString() {
         return new Fn1<Greeting, String>() {
             public String apply(Greeting greeting) {
                 return greeting.getGreeting();

@@ -69,7 +69,7 @@ public abstract class Sequence {
 		return foldLeft(source.iterator(), fn, accumulator); 
 	}
 
-	private static <TIn, TOut> TOut foldLeft(Iterator<TIn> source, Fn2<TIn, TOut, TOut> fn, TOut accumulator) {
+	public static <TIn, TOut> TOut foldLeft(Iterator<TIn> source, Fn2<TIn, TOut, TOut> fn, TOut accumulator) {
 	    // Recursion without "Tail Call Optimizing" is not a good idea.
         while(source.hasNext())
             accumulator = fn.apply(source.next(), accumulator);
@@ -80,7 +80,7 @@ public abstract class Sequence {
         return foldRight(source.iterator(), fn, accumulator);
     }
 
-    private static <TOut, TIn> TOut foldRight(Iterator<TIn> iterator, Fn2<TIn, TOut, TOut> fn,TOut accumulator) {
+    public static <TOut, TIn> TOut foldRight(Iterator<TIn> iterator, Fn2<TIn, TOut, TOut> fn,TOut accumulator) {
         return iterator.hasNext()
                     ? fn.apply(iterator.next(), foldRight(iterator, fn, accumulator))
                     : accumulator;

@@ -84,7 +84,7 @@ public class UsingFunctions {
         purposes here we also want to turn the =Greeting= into a =String=. Each such mapping 
         gets its own reusable mapping function:
         */
-        String greetingsPhrase = greetingToString().apply(
+        String greetingsPhrase = greetingToString.apply(
                 typedPersonalGreeting().apply(
                                     userCreator().apply("Daniel")));
         /*!
@@ -119,7 +119,7 @@ public class UsingFunctions {
         the =compose= method and create a function to use later on:
         */
         Fn1<String, String> greetPerson = 
-            userCreator().compose(typedPersonalGreeting().compose(greetingToString()));
+            userCreator().compose(typedPersonalGreeting().compose(greetingToString));
         
         String greetingsPhrase = greetPerson.apply("Daniel");
         /*!
@@ -141,7 +141,7 @@ public class UsingFunctions {
         could also be created using
         */
         Fn1<String, String> greetPerson = 
-            userCreator().compose(typedPersonalGreeting()).compose(greetingToString());
+            userCreator().compose(typedPersonalGreeting()).compose(greetingToString);
         String greetingsPhrase = greetPerson.apply("Johan");
         /*!
         (note the placement of the parenthesis)

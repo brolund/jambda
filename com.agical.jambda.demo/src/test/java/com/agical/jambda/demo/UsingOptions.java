@@ -1,12 +1,17 @@
 package com.agical.jambda.demo;
 
-import static com.agical.jambda.demo.DemoFunctions.typedAnonymousGreeting;
-import static com.agical.jambda.demo.DemoFunctions.typedPersonalGreeting;
+import static com.agical.jambda.demo.DemoFunctions.*;
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
 import com.agical.jambda.Option;
+import com.agical.jambda.Sequence;
+import com.agical.jambda.Functions.Fn2;
 
 public class UsingOptions {
     /*!!
@@ -47,6 +52,21 @@ public class UsingOptions {
         In this case, the second function will be used to create the =Greeting=.
         */
         
+    }
+    
+    @Test
+    public void mapsAndLists() throws Exception {
+        Map<String,Integer> m = new HashMap<String, Integer>();
+        m.put("Hej", 2);
+        m.put("Hopp", 342);
+        m.put("Galopp", 345456577);
+        String s = Sequence.foldLeft(m.entrySet(), new Fn2<Entry<String, Integer>,String,String>() {
+            public String apply(Entry<String, Integer> arg1, String arg2) {
+                return arg2 + arg1.getKey() + arg1.getValue();
+            }
+        },""
+        );
+        System.out.println(s);
     }
 
 }

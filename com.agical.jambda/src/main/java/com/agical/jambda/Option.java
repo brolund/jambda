@@ -119,7 +119,6 @@ public abstract class Option<T> extends AbstractCollection<T> {
 	    	throw new UnsupportedOperationException();
 	    }
 	}
-
 }
 
 
