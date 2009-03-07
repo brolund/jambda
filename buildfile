@@ -10,7 +10,7 @@ COPYRIGHT = "(c) 2008-2009 Johan Kullbom, Daniel Brolund, Joakim Ohlrogge"
 repositories.remote << "http://www.ibiblio.org/maven2/"
 repositories.remote << "http://www.agical.com/maven2/"
 
-BUMBLEBEE  = ['com.agical.bumblebee:bumblebee-all:jar:1.0.4']
+BUMBLEBEE  = ['com.agical.bumblebee:bumblebee-all:jar:1.0.5']
 
 desc "The jambda project"
 define "jambda" do

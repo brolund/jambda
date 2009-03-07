@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="M2_REPO/com/agical/bumblebee/bumblebee-all/1.0.4/bumblebee-all-1.0.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/agical/bumblebee/bumblebee-all/1.0.5/bumblebee-all-1.0.5.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.agical.jambda"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

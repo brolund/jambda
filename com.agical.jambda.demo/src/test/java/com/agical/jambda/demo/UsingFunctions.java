@@ -57,7 +57,7 @@ public class UsingFunctions {
         /*!
         =Fn1= maps data from one type to another, in this case =Integer= to =String=.
         */
-        String greetingsPhrase = personalGreeting().apply(new Integer(1));
+        String greetingsPhrase = personalGreeting.apply(new Integer(1));
         /*!
         The =greetingsPhrase= variable is:
         >>>>
@@ -65,7 +65,7 @@ public class UsingFunctions {
         <<<<
         The implementation of =personalGreeting()= is
         >>>>
-        #{clazz('com.agical.jambda.demo.DemoFunctions').personalGreeting}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').variable('personalGreeting')}
         <<<<
         */
         assertEquals("Hello, nr 1!", greetingsPhrase);
@@ -100,7 +100,7 @@ public class UsingFunctions {
         #{clazz('com.agical.jambda.demo.DemoFunctions').typedPersonalGreeting}
         <<<<
         >>>>
-        #{clazz('com.agical.jambda.demo.DemoFunctions').greetingToString}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').variable('greetingToString')}
         <<<<
         The instantiable classes =Greeting= and =User= are just *simple java beans*, or 
         *structs* as a functional programmer would put it. 

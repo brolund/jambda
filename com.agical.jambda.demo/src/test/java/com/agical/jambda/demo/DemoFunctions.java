@@ -6,25 +6,20 @@ import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 
 public class DemoFunctions {
-    
-    // These are functions due to problems parsing the file with QDox (used in Bumblebee)
-    
-    public static final Fn1<Greeting, String> greetingToString = greetingToString();
-    private static Fn1<Greeting, String> greetingToString() {
-        return new Fn1<Greeting, String>() {
+        
+    public static final Fn1<Greeting, String> greetingToString = 
+        new Fn1<Greeting, String>() {
             public String apply(Greeting greeting) {
                 return greeting.getGreeting();
             }
         };
-    }
     
-    public static Fn1<Integer, String> personalGreeting() {
-        return new Fn1<Integer, String>() {
+    public static Fn1<Integer, String> personalGreeting =
+        new Fn1<Integer, String>() {
             public String apply(Integer nr) {
                 return "Hello, nr " + nr + "!";
             }
         };
-    }
     
     public static Fn1<User, Greeting> typedPersonalGreeting() {
         return new Fn1<User, Greeting>() {
