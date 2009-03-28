@@ -11,7 +11,6 @@ import com.agical.bumblebee.junit4.Storage;
 import com.agical.jambda.Parallel;
 import com.agical.jambda.Sequence;
 import com.agical.jambda.Tuples;
-import com.agical.jambda.Unit;
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;

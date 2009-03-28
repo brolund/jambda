@@ -85,8 +85,7 @@ public class UsingFunctions {
         gets its own reusable mapping function:
         */
         String greetingsPhrase = greetingToString.apply(
-                typedPersonalGreeting().apply(
-                                    userCreator().apply("Daniel")));
+                typedPersonalGreeting.apply(userCreator.apply("Daniel")));
         /*!
         The =greetingsPhrase= variable is (as before):
         >>>>
@@ -94,10 +93,10 @@ public class UsingFunctions {
         <<<<
         The implementations used are:
         >>>>
-        #{clazz('com.agical.jambda.demo.DemoFunctions').userCreator}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').variable('userCreator')}
         <<<<
         >>>>
-        #{clazz('com.agical.jambda.demo.DemoFunctions').typedPersonalGreeting}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').variable('typedPersonalGreeting')}
         <<<<
         >>>>
         #{clazz('com.agical.jambda.demo.DemoFunctions').variable('greetingToString')}
@@ -119,7 +118,7 @@ public class UsingFunctions {
         the =compose= method and create a function to use later on:
         */
         Fn1<String, String> greetPerson = 
-            userCreator().compose(typedPersonalGreeting().compose(greetingToString));
+            userCreator.compose(typedPersonalGreeting.compose(greetingToString));
         
         String greetingsPhrase = greetPerson.apply("Daniel");
         /*!
@@ -141,7 +140,7 @@ public class UsingFunctions {
         could also be created using
         */
         Fn1<String, String> greetPerson = 
-            userCreator().compose(typedPersonalGreeting()).compose(greetingToString);
+            userCreator.compose(typedPersonalGreeting).compose(greetingToString);
         String greetingsPhrase = greetPerson.apply("Johan");
         /*!
         (note the placement of the parenthesis)
@@ -165,7 +164,7 @@ public class UsingFunctions {
         
         The simplest example in Jambda is this:
         */
-        Fn0<User> spicedUp = userCreator().curry("Daniel");
+        Fn0<User> spicedUp = userCreator.curry("Daniel");
         /*!
         The =userCreator= is a function that takes a String and produces a
         User with that name. By *currying* it with the name, a new  

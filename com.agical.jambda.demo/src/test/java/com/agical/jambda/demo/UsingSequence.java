@@ -33,7 +33,7 @@ public class UsingSequence {
         */
         Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
         
-        Iterable<User> users = Sequence.map(userNames, userCreator());
+        Iterable<User> users = Sequence.map(userNames, userCreator);
         Iterator<User> iterator = users.iterator();
         assertEquals("Daniel", iterator.next().getName());
         assertEquals("Johan", iterator.next().getName());
@@ -92,15 +92,15 @@ public class UsingSequence {
         /*!
         Now we will use an aggregating function to create a string:
         >>>>
-        #{clazz('com.agical.jambda.demo.DemoFunctions').aggregateStrings}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').variable('aggregateStrings')}
         <<<<
         This function simply appends the =string= parameter to the =accumulation= parameter and puts
         parenthesis around.  
         
         Then we use the =foldLeft= and the =foldRight= respectively to apply the function to the list of names
         */
-        String foldLeft = Sequence.foldLeft(userNames, aggregateStrings(), "");
-        String foldRight = Sequence.foldRight(userNames, aggregateStrings(), "");
+        String foldLeft = Sequence.foldLeft(userNames, aggregateStrings, "");
+        String foldRight = Sequence.foldRight(userNames, aggregateStrings, "");
         /*!
         The results are 
         >>>>
@@ -125,7 +125,7 @@ public class UsingSequence {
         */
         Iterable<String> userNames = Sequence.createSequence("Daniel", "Johan", "Joakim");
         
-        Iterable<String> users = Sequence.filter(userNames, acceptStringsStartingWithJ());
+        Iterable<String> users = Sequence.filter(userNames, acceptStringsStartingWithJ);
         Iterator<String> iterator = users.iterator();
         assertEquals("Johan", iterator.next());
         assertEquals("Joakim", iterator.next());
@@ -135,7 +135,7 @@ public class UsingSequence {
         
         The function used to filter looks like this:
         >>>>
-        #{clazz('com.agical.jambda.demo.DemoFunctions').acceptStringsStartingWithJ}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').variable('acceptStringsStartingWithJ')}
         <<<<
         
         */

@@ -24,7 +24,7 @@ public class UsingUnions {
         the normal case:
         */
         Union<User, Exception> userRetrievalWentWell = Union.left(new User("Daniel"));
-        Greeting normalGreeting = userRetrievalWentWell.map(typedPersonalGreeting(), exceptionGreeting());
+        Greeting normalGreeting = userRetrievalWentWell.map(typedPersonalGreeting, exceptionGreeting);
         assertEquals("Hello, Daniel!", normalGreeting.getGreeting());
         /*!
         In the case we couldn't retrieve the user we have to create another greeting. This is done by passing exactly 
@@ -33,12 +33,12 @@ public class UsingUnions {
         */
         String message = "Couldn't retrieve user";
         Union<User, Exception> oopsExceptionWasThrown = Union.right(new Exception(message));
-        Greeting exceptionGreeting = oopsExceptionWasThrown.map(typedPersonalGreeting(), exceptionGreeting());
-        assertEquals("There was an Exception: " + message, exceptionGreeting.getGreeting());
+        Greeting unsuccessfulGreeting = oopsExceptionWasThrown.map(typedPersonalGreeting, exceptionGreeting);
+        assertEquals("There was an Exception: " + message, unsuccessfulGreeting.getGreeting());
         /*!
         The function that handles the exception looks like this:
         >>>>
-        #{clazz('com.agical.jambda.demo.DemoFunctions').exceptionGreeting}
+        #{clazz('com.agical.jambda.demo.DemoFunctions').variable('exceptionGreeting')}
         <<<<
         This is of course not the only application of Unions, but it shows a powerful application.
         
