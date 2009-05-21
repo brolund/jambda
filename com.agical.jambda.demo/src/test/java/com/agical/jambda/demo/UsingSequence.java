@@ -179,9 +179,7 @@ public class UsingSequence {
         assertEquals(new Integer(1), limitedRangeIterator.next());
         assertFalse(limitedRangeIterator.hasNext());
         
-        /*!
-         
-        */
+        /*! */
     }
     
     @Test
@@ -200,7 +198,8 @@ public class UsingSequence {
         assertEquals(new Integer(4), iterator.next());
         assertEquals(new Integer(5), iterator.next());
         assertFalse(iterator.hasNext());
-        /*!*/
+        
+        /*! */
     }
 
     

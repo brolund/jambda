@@ -2,12 +2,17 @@ package com.agical.jambda.demo;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
+import com.agical.jambda.Numeric;
 import com.agical.jambda.Parallel;
 import com.agical.jambda.Sequence;
 import com.agical.jambda.Tuples;
@@ -15,6 +20,7 @@ import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 import com.agical.jambda.Tuples.Tuple2;
+import com.sun.xml.internal.ws.message.ByteArrayAttachment;
 
 public class ParallelExecution {
     
@@ -76,7 +82,7 @@ public class ParallelExecution {
     public void differentReturnValues() throws Exception {
         /*!
         If you need to have different return types, use the functions taking a 
-        =Tuple= of functions.
+        =Tuple= of functions. 
         */
         Fn1<Integer,String> delay1 = new Fn1<Integer,String>() {
             public String apply(Integer sleep) {
@@ -105,4 +111,30 @@ public class ParallelExecution {
         /*!*/
     }
     
+    @Test
+    public void distributedExecution() throws Exception {
+        /*
+        A *pure function* is a function that have no side-effects, i.e. 
+        it only read the parameters it gets and it produces a return value. 
+        
+        Pure functions can always be executed in parallel, even at different
+        hardware nodes, without any concerns about data synchronization.
+        
+        Jambda is building up support for transparent distributed execution.
+        */
+        
+        
+        
+        Fn0<Double> originalFunction = Numeric.multiply(Numeric.doubleType).apply(3D).curry(7D);
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream (byteArrayOutputStream);
+        objectOutputStream.writeObject ( originalFunction );
+        
+        ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+        Fn0<Double> awakenedFunction = (Fn0<Double>) objectInputStream.readObject();
+
+        assertEquals(originalFunction.apply(), awakenedFunction.apply());
+        fail("Need to implement distributed execution");
+    }
 }

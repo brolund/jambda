@@ -142,7 +142,7 @@ public abstract class Sequence {
 	}
 	
 	/**
-	 * Creates a sequence, its elements are calculated from the function and the elements of input sequences occurring 
+	 * Creates a sequence, its elements are calculated by the function from the elements of input sequences occurring 
 	 * at the same position in both sequences.
 	 */
 	public static <TIn1, TIn2, TOut> Iterable<TOut> zipWith(final Iterable<TIn1> s1, final Iterable<TIn2> s2, 

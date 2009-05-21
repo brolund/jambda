@@ -1,14 +1,16 @@
 package com.agical.jambda;
 
+import java.io.Serializable;
+
 import com.agical.jambda.Tuples.*;
 
 public class Functions {
 
-    public static abstract class Fn0<R> {
+    public static abstract class Fn0<R> implements Serializable {
         public abstract R apply();
     }
 
-    public static abstract class Fn1<T, R> {
+    public static abstract class Fn1<T, R> implements Serializable {
         public abstract R apply(T arg);
         
         public Fn1<T, R> apply() {
@@ -26,13 +28,26 @@ public class Functions {
 		public <R2> Fn1<T, R2> compose(final Fn1<R, R2> g) {
         	return new Fn1<T, R2>() {
                 public R2 apply(T x) {
-                    return g.apply(Fn1.this.apply(x));
+                    return execute(g.curry(Fn1.this.apply(x)));
                 }
             };
         }
+		
+		public <R> R execute(final Fn0<R> f) {
+		    StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+		    for (StackTraceElement stackTraceElement : stackTrace) {
+                try {
+                    System.out.println(Class.forName(stackTraceElement.getClassName()).getName() + ":" + stackTraceElement.getMethodName());
+                } catch (ClassNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+		    return f.apply();
+		}
     }
 
-    public static abstract class Fn2<T1, T2, R> extends Fn1<T1, Fn1<T2, R>>{
+    public static abstract class Fn2<T1, T2, R> extends Fn1<T1, Fn1<T2, R>> implements Serializable {
         public abstract R apply(T1 arg1, T2 arg2);
 
         public Fn1<T2, R> apply(final T1 arg1) {

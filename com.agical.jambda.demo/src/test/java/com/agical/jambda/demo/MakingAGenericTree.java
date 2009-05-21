@@ -88,7 +88,8 @@ public class MakingAGenericTree {
                 "Level 2: Daniel" +
                 "Level 3: Johan" +
                 "Level 2: 2", result.toString());
-        /*!*/
+        /*!
+        */
     }
     
     public interface Visitor {

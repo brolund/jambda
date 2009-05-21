@@ -1,5 +1,6 @@
 package com.agical.jambda;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -7,7 +8,7 @@ import com.agical.jambda.Functions.*;
 
 import static com.agical.jambda.Sequence.*;
 
-public abstract class Numeric<T> {
+public abstract class Numeric<T> implements Serializable {
     public abstract T zero();
     public abstract T one();
     public abstract T fromInt(Integer x);
@@ -210,14 +211,14 @@ public abstract class Numeric<T> {
     
     /*
       correlate1 :: [Double] -> [Double] -> Double 
-    æ correlate1 ks = sum . zipWith (*) ks 
+    ï¿½ correlate1 ks = sum . zipWith (*) ks 
 
-    æ correlate :: [Double] -> [Double] -> [Double] 
-    æ correlate ks [] = [] 
-    æ correlate ks xs = correlate1 ks xs : correlate ks (tail xs) 
+    ï¿½ correlate :: [Double] -> [Double] -> [Double] 
+    ï¿½ correlate ks [] = [] 
+    ï¿½ correlate ks xs = correlate1 ks xs : correlate ks (tail xs) 
 
-    æ convolute :: [Double] -> [Double] -> [Double] 
-    æ convolute ks = correlate (reverse ks) 
+    ï¿½ convolute :: [Double] -> [Double] -> [Double] 
+    ï¿½ convolute ks = correlate (reverse ks) 
     
     private static <T, TNum extends Numeric<T>> T correlate1(TNum numType, Iterable<T> ks, Iterable<T> xs) {
         return sum(numType, zipWith(ks, xs, multiply(numType)));
