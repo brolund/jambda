@@ -3,7 +3,6 @@ package com.agical.jambda;
 import static com.agical.jambda.Option.none;
 import static com.agical.jambda.Option.some;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

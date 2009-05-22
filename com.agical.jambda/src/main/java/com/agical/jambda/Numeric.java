@@ -1,14 +1,14 @@
 package com.agical.jambda;
 
-import java.io.Serializable;
+import static com.agical.jambda.Sequence.count;
+import static com.agical.jambda.Sequence.foldLeft;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.agical.jambda.Functions.*;
+import com.agical.jambda.Functions.Fn2;
 
-import static com.agical.jambda.Sequence.*;
-
-public abstract class Numeric<T> implements Serializable {
+public abstract class Numeric<T> {
     public abstract T zero();
     public abstract T one();
     public abstract T fromInt(Integer x);

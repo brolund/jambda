@@ -1,6 +1,7 @@
 package com.agical.jambda;
 
-import static com.agical.jambda.Sequence.*;
+import static com.agical.jambda.Sequence.concat;
+import static com.agical.jambda.Sequence.foldLeft;
 
 import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;

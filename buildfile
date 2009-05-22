@@ -36,6 +36,7 @@ define "jambda" do
     manifest["Implementation-Vendor"] = COPYRIGHT
     compile.with project('com.agical.jambda')
     compile.with BUMBLEBEE
+    test.include 'com.agical.jambda.demo.TestSuite'
     package :jar
   end
 

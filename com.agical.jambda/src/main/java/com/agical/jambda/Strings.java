@@ -1,13 +1,8 @@
 package com.agical.jambda;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Iterator;
 
-import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class Strings {
 	

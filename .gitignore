@@ -1,0 +1,12 @@
+.metadata
+*.class
+*.log
+*~
+reports/
+.DS_Store
+RemoteSystemsTempFiles
+target/
+bin/
+classes/
+.manager/
+

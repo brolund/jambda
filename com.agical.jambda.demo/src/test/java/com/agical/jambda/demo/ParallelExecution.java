@@ -1,6 +1,8 @@
 package com.agical.jambda.demo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.agical.bumblebee.junit4.Storage;
@@ -20,7 +23,6 @@ import com.agical.jambda.Functions.Fn0;
 import com.agical.jambda.Functions.Fn1;
 import com.agical.jambda.Functions.Fn2;
 import com.agical.jambda.Tuples.Tuple2;
-import com.sun.xml.internal.ws.message.ByteArrayAttachment;
 
 public class ParallelExecution {
     
@@ -112,6 +114,7 @@ public class ParallelExecution {
     }
     
     @Test
+    @Ignore
     public void distributedExecution() throws Exception {
         /*
         A *pure function* is a function that have no side-effects, i.e. 

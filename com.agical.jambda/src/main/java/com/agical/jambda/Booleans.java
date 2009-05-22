@@ -1,6 +1,7 @@
 package com.agical.jambda;
 
-import com.agical.jambda.Functions.*;
+import com.agical.jambda.Functions.Fn1;
+import com.agical.jambda.Functions.Fn2;
 
 public class Booleans {
     
